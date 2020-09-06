@@ -1,5 +1,4 @@
 import React from 'react';
-// import './App.css';
 import {
     withScriptjs,
     withGoogleMap,
@@ -9,11 +8,12 @@ import {
 } from "react-google-maps";
 import Geocode from "react-geocode";
 // import { Descriptions, Input } from 'antd';
-import PixelTypography from './PixelTypography';
+// import PixelTypography from './PixelTypography';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import AutoComplete from "react-google-autocomplete";
+import BtmNav from './BtmNav'
 
 
 Geocode.setApiKey("AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM")
@@ -259,9 +259,11 @@ export default class Tracker extends React.Component {
               containerElement={<div style={{ height: `400px` }} />}
               mapElement={<div style={{ height: `100%` }} />}
             />
+
+            <BtmNav />
         </div>
         
-      );
+    );
   }
 }
 
