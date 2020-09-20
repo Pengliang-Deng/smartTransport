@@ -1,3 +1,4 @@
+/* testData */
 export const gameInfo1 = {
     fieldInfo: {
         // number of grids
