@@ -40,12 +40,18 @@ export default class Garden extends React.Component {
         this.state = {
             currentTool: 0,
             fieldInfo: {
+                // number of grids in the field
                 size: gameInfo.fieldInfo.size,
+                // styles of the garden
                 tileBackground: gameInfo.fieldInfo.tileBackground,
                 fenceImage: gameInfo.fieldInfo.fenceImage,
                 gridBackground: gameInfo.fieldInfo.gridBackground,
                 gridOutline: gameInfo.fieldInfo.gridOutline,
+
+                // information of all grids
                 grids: gameInfo.fieldInfo.grids,
+
+                // current selected grid
                 selected: null,
             },
             playerInfo: {
@@ -54,6 +60,7 @@ export default class Garden extends React.Component {
             itemsInfo: {
                coins: gameInfo.itemsInfo.coins,
                resources: {
+                   /* number of resources */
                    water: gameInfo.itemsInfo.resources.water,
                    fertilizer: gameInfo.itemsInfo.resources.fertilizer,
                    sunny: gameInfo.itemsInfo.resources.sunny,
