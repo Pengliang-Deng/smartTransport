@@ -1,10 +1,15 @@
+/* testData */
 export const gameInfo1 = {
     fieldInfo: {
+        // number of grids
         size: 12,
+        // field styles
         tileBackground: 'stone-brick',
         fenceImage: 'normal',
         gridBackground: 'normal',
         gridOutline: 'normal',
+
+        // the information of every grid
         grids: [
             {
                 flower: 'eustoma',
@@ -52,6 +57,7 @@ export const gameInfo1 = {
     },
     playerInfo: {
         playerName: 'new Player',
+        /* TODO */
     },
     itemsInfo: {
         coins: 100,
@@ -61,7 +67,7 @@ export const gameInfo1 = {
             sunny: 200,
         },
         seeds: {
-
+            /* TODO */
         }
     }
 }
