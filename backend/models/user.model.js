@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { json } = require('express');
 
 const userSchema = new mongoose.Schema({
     username: {

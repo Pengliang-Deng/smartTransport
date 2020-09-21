@@ -15,7 +15,21 @@ const useStyles = makeStyles({
 
 export default function BtmNav(props) {
     const styles = useStyles();
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(props.current);
+
+    const trackNav = () => {
+        window.location = '/homepage'
+    }
+
+    const gardenNav  = () => {
+        window.location = '/garden'
+    }
+
+    const challengesNav = () => {
+        window.location = '/challenges'
+    }
+
+
     return (
         <BottomNavigation
             value={value}
@@ -25,11 +39,15 @@ export default function BtmNav(props) {
             showLabels
             className={styles.container}
         >
-            <BottomNavigationAction label="Tracker" icon={<Timer />} />
-            <Link to='/garden' >
-                <BottomNavigationAction icon={<House />} />
-            </Link>
-            <BottomNavigationAction label="Challenges" icon={<QuestionAnswer />}/>
+        
+            <BottomNavigationAction onClick={trackNav} label="Tracker" icon={<Timer />} /> 
+                
+          
+            <BottomNavigationAction onClick={gardenNav} label="Garden" icon={<House />} />
+     
+
+            <BottomNavigationAction onClick={challengesNav} label="Challenges" icon={<QuestionAnswer />} />
+
         </BottomNavigation>
     )
 }

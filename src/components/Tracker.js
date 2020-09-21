@@ -260,7 +260,7 @@ export default class Tracker extends React.Component {
               mapElement={<div style={{ height: `100%` }} />}
             />
 
-            <BtmNav />
+            <BtmNav current={0}/>
         </div>
         
     );
