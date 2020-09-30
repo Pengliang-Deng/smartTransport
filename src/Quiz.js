@@ -12,6 +12,7 @@ import backgroundImg from './imgs/quizBg.jpg';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import {Link} from 'react-router-dom';
+import Modal from '@material-ui/core/Modal';
 
 
 const useStyle = makeStyles((theme) => ({
@@ -40,7 +41,6 @@ const useStyle = makeStyles((theme) => ({
     container: {
         paddingTop: 80,
         paddingBottom: 80,
-  
     },
     textCenter: {
         marginTop:40,
@@ -62,6 +62,20 @@ const useStyle = makeStyles((theme) => ({
         marginBottom:30,
         textAlign:"center",
         fontWeight:'bold',
+    },
+    modal: {
+        paddingTop: '10%',
+        paddingBottom: '10%',
+        paddingLeft: '6%',
+        paddingRight: '6%',
+        fontWeight: 'bold',
+        fontSize: '1.2rem',
+        // overflowWrap: 'break-word',
+        // wordWrap: 'break-word',
+        // hyphens: 'auto',
+        marginLeft: '5%',
+        marginRight: '5%',
+        marginTop:'50%',
     }
 }))
 
@@ -71,6 +85,7 @@ export default function Quiz() {
     const [question, setQuestion] = useState('');
     const [userAnswer, setUserAnswer] = useState('');
     const [correctness, setCorrectness] = useState(false);
+    const [open, setOpen] = useState(false);
     
     useEffect(() => {
         const randomIndex = Math.floor(Math.random()*10);
@@ -84,15 +99,27 @@ export default function Quiz() {
         if (answerChosen == question.answer) {
             console.log('true');
             setCorrectness(true);
+            // Open modal
+            setOpen(true);
             // To do something with user's info
             // Showing info that answer correctly and stop user from answering
         } else {
             setCorrectness(false);
+            // Open modal
+            setOpen(true);
             // To do something with user's info
             // Stop user from choosing other options 
             // Should return
         }
     }
+
+    const handleClose = (event) => {
+        setOpen(false);
+        window.location = '/challenges';
+    }
+
+    const correctText = 'Your Answer is correct. 10 Points have been added.';
+    const falseText = 'Sorry, your answer is not correct. Please try tomorrow.'
 
     return (
         <div>
@@ -125,6 +152,14 @@ export default function Quiz() {
                     <ListItemText className={`${(userAnswer == 'd' && correctness)? classes.correct : classes.textCenter}`} primary={`D. ${question.d}`} />
                 </ListItem>
             </List>
+            <Modal
+                open={open}
+                onClose={handleClose}
+            >
+                <Paper className={classes.modal}>
+                    {correctness? correctText : falseText}
+                </Paper>
+            </Modal>
         </div>
         
     )

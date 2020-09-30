@@ -4,8 +4,10 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import BtmNav from "./Components/BtmNav";
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Fab from '@material-ui/core/Fab'
-// import Paper from '@material-ui/core/Paper';
+import Fab from '@material-ui/core/Fab';
+import Modal from '@material-ui/core/Modal';
+import Paper from '@material-ui/core/Paper';
+
 
 const styles = ({
     quizBtn:{
@@ -21,25 +23,68 @@ const styles = ({
         marginRight:'10%',
         marginBottom:50,
         padding:5
+    },
+    modal: {
+        paddingTop: '10%',
+        paddingBottom: '10%',
+        paddingLeft: '6%',
+        paddingRight: '6%',
+        fontWeight: 'bold',
+        fontSize: '1.2rem',
+        marginLeft: '5%',
+        marginRight: '5%',
+        marginTop:'50%',
     }
 })
-
 
 export default class Challenges extends Component {
     constructor(props) {
         super(props);
 
+        this.quizNav = this.quizNav.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        // getting last Date from database
+        const lastDate = 'WedSep302020';
+        const today = this.getMyDate();
+
         this.state = {
             countsPublicTrans: 2,
             countsWalk: 4,
             countsBike: 1,
-            countsQuiz: 2
+            countsQuiz: 2,
+            open: false,
+            lastTrial: lastDate, // should have a default value
+            today: today,
         }
     }
 
-    quizNav() {
-        window.location = '/quiz'
+    getMyDate() {
+        let date = new Date();
+        let myDateArray = date.toString().split(' ');
+        let myDate = myDateArray[0] + myDateArray[1] + myDateArray[2] + myDateArray[3];
+        return myDate
     }
+
+    quizNav() {
+       
+        // console.log(this.state.lastTrial)
+        // console.log(this.state.today)
+        if (this.state.lastTrial != this.state.today) {
+            this.setState({lastTrial : this.state.today})
+            // update the database
+            window.location = '/quiz';
+        } else {
+            this.setState({open:true});
+            // console.log(this.state.open)
+        }
+        
+    }
+
+    handleClose() {
+        this.setState({open:false})
+        // console.log(this.state.open)
+    }
+
 
     render() {
         return (
@@ -64,6 +109,14 @@ export default class Challenges extends Component {
                 
                 <Typography variant='h6'>{`Progress: ${this.state.countsQuiz}/4`}</Typography>
                 <BtmNav current={2}/>
+                <Modal
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                >
+                    <Paper style={styles.modal}>
+                        You have tried today.
+                    </Paper>
+                </Modal>
             </div>
         )
     }
