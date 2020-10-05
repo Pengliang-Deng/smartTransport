@@ -99,7 +99,7 @@ export default function GardenField(props){
     const gridBackground = fieldImages.gridBackground[props.fieldInfo.gridBackground];
     const gridOutline = fieldImages.gridOutline[props.fieldInfo.gridOutline];
     const grids = props.fieldInfo.grids;
-    const selectedGrid = props.fieldInfo.selected;
+    const selectedGrid = props.selected;
 
         const useStyles = makeStyles((theme) => ({
             field: {
@@ -129,7 +129,7 @@ export default function GardenField(props){
                         {arr.map((value) => (
                             <GardenFieldGrid
                                 isSelected={(value === selectedGrid)}
-                                onClick={() => props.onClick(value)} key={value}
+                                onClick={(target) => props.onClick([value, target])} key={value}
                                 background={gridBackground} outline={gridOutline}
                                 gridInfo={grids[value]}/>
                         ))}
@@ -137,7 +137,6 @@ export default function GardenField(props){
                 </Grid>
             </Grid>
         )
-
 }
 
 function GardenFieldGrid(props) {
@@ -204,7 +203,7 @@ function GardenFieldGrid(props) {
     }
 
     return (
-        <Grid onClick={() => props.onClick()} item xs={4} style={{position: 'relative'}}>
+        <Grid onClick={(event) => props.onClick(event.currentTarget)} item xs={4} style={{position: 'relative'}}>
             <Box className={classes.filedGrid} style={{position: 'relative'}}>
                 <img style={{maxWidth: '100%', position: 'absolute' , bottom: '35%'}} src={flowerImageSrc}/>
             </Box>

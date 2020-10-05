@@ -9,6 +9,7 @@ import GardenToolsBar from "./components/garden_ui/gardenToolsBar";
 import GardenField from "./components/garden_ui/gardenField";
 
 import bgImg from './components/garden_ui/sky.png';
+import GridMenu from "./components/garden_ui/gridMenu";
 
 
 export default class Garden extends React.Component {
@@ -16,8 +17,9 @@ export default class Garden extends React.Component {
         super(props);
         /**
          * @type {{
+         *  selected: number,
          *  fieldInfo: {size:number, tileBackground: string, fenceImage: string,
-         *       gridBackground: string, gridOutline: string, grids: [], selected: number},
+         *       gridBackground: string, gridOutline: string, grids: [], },
          *  playerInfo: {playerName: string},
          *  itemsInfo: {coins: number, resources: {water:number, fertilizer: number, sunny: number},seeds: []}
          * }}
@@ -43,6 +45,9 @@ export default class Garden extends React.Component {
         }
         this.state = {
             currentTool: 0,
+            // current selected grid
+            selected: null,
+
             fieldInfo: {
                 // number of grids in the field
                 size: gameInfo.fieldInfo.size,
@@ -55,8 +60,6 @@ export default class Garden extends React.Component {
                 // information of all grids
                 grids: gameInfo.fieldInfo.grids,
 
-                // current selected grid
-                selected: null,
             },
             playerInfo: {
                 playerName: gameInfo.playerInfo.playerName,
@@ -86,7 +89,7 @@ export default class Garden extends React.Component {
                 }} container>
                 </Box>
                 <TopBar/>
-                <GardenField onClick={(i) => this.handleFieldClick(i)} fieldInfo={this.state.fieldInfo}/>
+                <GardenField onClick={(i) => this.handleFieldClick(i)} fieldInfo={this.state.fieldInfo} selected = {this.state.selected}/>
                 <GardenToolsBar resourcesNumber={this.state.itemsInfo.resources} currentTool={this.state.currentTool} onClick={(i) => this.handleToolBarClick(i)}/>
             </Box>
         );
@@ -96,12 +99,14 @@ export default class Garden extends React.Component {
         let stateTemp = JSON.parse(JSON.stringify(this.state));
         stateTemp.currentTool = i;
         if (i !== 0) {
-            stateTemp.fieldInfo.selected = null;
+            stateTemp.selected = null;
         }
         this.setState(stateTemp);
     }
 
-    handleFieldClick(i) {
+    handleFieldClick(target) {
+        const i = target[0]; // index of target grid
+
         /* Value increments of items */
         const WATER_INCREMENT = 10;
         const FERTILIZER_INCREMENT = 10;
@@ -117,7 +122,7 @@ export default class Garden extends React.Component {
         }
 
         if (stateTemp.currentTool === 0) { // SELECT
-            stateTemp.fieldInfo.selected = (stateTemp.fieldInfo.selected !== i)?i:null;
+            stateTemp.selected = (stateTemp.selected !== i)?i:null;
         }
         else if (stateTemp.currentTool === 1) { // FERTILIZER
             if (currentGrid.flower === "none") {
