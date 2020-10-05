@@ -12,9 +12,7 @@ const useStyles = makeStyles({
         height: '17px',
     },
     lp: {
-        colorPrimary: '#000000',
         height: '5px',
-        color: '#000000',
         border: '5px solid black'
     }
 });
@@ -29,11 +27,11 @@ function LinearProgressWithLabel(props) {
             <Box width="100%" mr={1}>
                 <LinearProgress className={classes.lp} variant="determinate" {...props} />
             </Box>
-            {/*<Box minWidth={35}>*/}
-            {/*    <Typography variant="body2" color="textSecondary">{`${Math.round(*/}
-            {/*        props.value,*/}
-            {/*    )}%`}</Typography>*/}
-            {/*</Box>*/}
+            <Box minWidth={30}>
+                <Typography variant="body2" color="textSecondary">{`${Math.round(
+                    props.value,
+                )}%`}</Typography>
+            </Box>
         </Box>
     );
 }
@@ -55,7 +53,7 @@ export function LinearWithValueLabel(props) {
 
     React.useEffect(() => {
         setProgress(props.curr);
-    }, []);
+    }, [props]);
 
     return (
         <div className={classes.root}>

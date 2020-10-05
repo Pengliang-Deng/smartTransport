@@ -6,6 +6,9 @@ import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 
 import PixelAppBar from "../containers/PixelAppBar";
 import {WaterCanIcon} from "../icons/toolIcons";
+import {FertilizerIcon} from "../icons/toolIcons";
+import {SunIcon} from "../icons/toolIcons";
+import {SelectIcon} from "../icons/toolIcons";
 import PanToolIcon from '@material-ui/icons/PanTool';
 import {HomeIcon} from '../icons/toolIcons';
 import {PanTool} from "@material-ui/icons";
@@ -33,12 +36,16 @@ export default function GardenToolsBar(props) {
                 value={props.currentTool}
                 style={{background: 'none', height: '90px'}}
             >
-                <BottomNavigationAction onClick={()=> props.onClick(0)} label={"SELECT"} icon={<PanToolIcon fontSize="large" />} />
+                <BottomNavigationAction onClick={()=> props.onClick(0)} label={"SELECT"} icon={<SelectIcon fontSize="large" />} />
                 <BottomNavigationAction onClick={()=> props.onClick(1)}
-                                        label={"WATER(" + props.resourcesNumber.fertilizer + ")"}
+                                        label={"Fertilizer(" + props.resourcesNumber.fertilizer + ")"}
+                                        icon={<FertilizerIcon fontSize="large" />} />
+                <BottomNavigationAction onClick={()=> props.onClick(2)}
+                                        label={"Water(" + props.resourcesNumber.water + ")"}
                                         icon={<WaterCanIcon fontSize="large" />} />
-                <BottomNavigationAction onClick={()=> props.onClick(2)} label="Select" icon={<HomeIcon fontSize="large" />} />
-                <BottomNavigationAction onClick={()=> props.onClick(3)} label="Select" icon={<HomeIcon fontSize="large" />} />
+                <BottomNavigationAction onClick={()=> props.onClick(3)}
+                                        label={"Sunny(" + props.resourcesNumber.sunny + ")"}
+                                        icon={<SunIcon fontSize="large" />} />
             </BottomNavigation>
         </PixelAppBar>
     );

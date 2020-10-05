@@ -166,12 +166,30 @@ function GardenFieldGrid(props) {
     const classes = useStyles();
 
     const gridInfo = props.gridInfo;
+    /* set the animation of growth, water and selection */
+
+    const [statusBar, setStatusBar] = React.useState(false);
+    const[status, setStatus] = React.useState(gridInfo.status);
+    React.useEffect(() => {
+        if (gridInfo.preGrowthValue < 100 && gridInfo.growthValue >= 100) {
+            setStatus('growth'); // show growth animation when growing
+        } else if (gridInfo.preWaterValue < 50 && gridInfo.waterValue >= 50) {
+            setStatus('revived'); // show reviving animation when flower is watered
+        }
+        // show status bar when status changes
+        setStatusBar(true);
+        // reset transition image
+        setTimeout( () => {setStatus(gridInfo.status)}, 2000);
+        // reset(hide) status bar
+        setTimeout(() => {setStatusBar(false)}, 1000);
+    }, [props.gridInfo.growthValue, props.gridInfo.waterValue, props.gridInfo.clickCount]);
+
     let flowerImageSrc = '';
     if (gridInfo.flower !== 'none') {
         if (gridInfo.growthValue < 100) {
             flowerImageSrc = fieldImages.flowers["seedling"];
         } else {
-            flowerImageSrc = fieldImages.flowers[gridInfo.flower][gridInfo.status];
+            flowerImageSrc = fieldImages.flowers[gridInfo.flower][status];
         }
     }
 
@@ -179,7 +197,8 @@ function GardenFieldGrid(props) {
         return (
             <ProgressBarSet className={classes.progressBarSet}
                                 style={{position:'absolute', bottom: '5%', left: '5%'}}
-                                growthValues={[0, props.gridInfo.growthValue]} waterValues={[0, props.gridInfo.waterValue]}>
+                                growthValues={[props.gridInfo.preGrowthValue, props.gridInfo.growthValue]}
+                            waterValues={[props.gridInfo.preWaterValue, props.gridInfo.waterValue]}>
             </ProgressBarSet>
         );
     }
@@ -193,7 +212,7 @@ function GardenFieldGrid(props) {
             {/*                style={{position:'absolute', bottom: '5%', left: '5%'}}*/}
             {/*                growthValues={[0, props.gridInfo.growthValue]} waterValues={[0, props.gridInfo.waterValue]}>*/}
             {/*</ProgressBarSet>*/}
-            {props.isSelected?progressBar():null}
+            {(statusBar||props.isSelected)?progressBar():null}
         </Grid>
     );
 }
