@@ -33,7 +33,7 @@ const userStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function TopBar() {
+export default function TopBar(props) {
     const classes = userStyles();
     return(
         <PixelAppBar position="fixed" className={classes.topBar}>
@@ -43,7 +43,7 @@ export default function TopBar() {
                     <ArrowBackIcon />
                 </IconButton>
             </Link>
-            <Box className={classes.title}>Player's Garden</Box>
+            <Box className={classes.title}>{props.title}</Box>
             <IconButton edge="end" className={classes.menuButton} color="inherit" aria-label="menu">
                 <MenuIcon />
             </IconButton>

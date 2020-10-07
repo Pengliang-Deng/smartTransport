@@ -80,6 +80,7 @@ export default class Garden extends React.Component {
     render() {
         return(
             <Box style={{left: 0, background: '#42A5F5'}} container className="app" xs={12}>
+                {/*Theme background*/}
                 <Box style={
                     {width: '100%',
                         height: '260px',
@@ -88,9 +89,18 @@ export default class Garden extends React.Component {
                         backgroundSize: 'contain',
                 }} container>
                 </Box>
-                <TopBar/>
-                <GardenField onClick={(i) => this.handleFieldClick(i)} fieldInfo={this.state.fieldInfo} selected = {this.state.selected}/>
-                <GardenToolsBar resourcesNumber={this.state.itemsInfo.resources} currentTool={this.state.currentTool} onClick={(i) => this.handleToolBarClick(i)}/>
+                {/*Title bar on the top*/}
+                <TopBar title={this.state.playerInfo.playerName + "'s Garden"}/>
+                {/*Garden Field*/}
+                <GardenField onClick={(i) => this.handleFieldClick(i)}
+                             fieldInfo={this.state.fieldInfo}
+                             selected = {this.state.selected}
+                gridOptions={(mode, gridIndex) => this.gridOptions(mode, gridIndex)}/>
+                {/*Tools Bar*/}
+                <GardenToolsBar
+                    resourcesNumber={this.state.itemsInfo.resources}
+                    currentTool={this.state.currentTool}
+                onClick={(i) => this.handleToolBarClick(i)}/>
             </Box>
         );
     }
@@ -113,7 +123,7 @@ export default class Garden extends React.Component {
         const SUN_INCREMENT = 10;
 
         let stateTemp = JSON.parse(JSON.stringify(this.state));
-        let currentGrid = stateTemp.fieldInfo.grids[i]
+        let currentGrid = stateTemp.fieldInfo.grids[i];
 
         // record current water and growth values before intended changes happen
         for (let i=0; i < stateTemp.fieldInfo.grids.length; i++) {
@@ -136,10 +146,11 @@ export default class Garden extends React.Component {
                 stateTemp.itemsInfo.resources.fertilizer = Math.max(0, this.state.itemsInfo.resources.fertilizer - 1)
             }
         }
+
         /* Click detection*/
-        if (currentGrid.clickCount) {
+        if (currentGrid.clickCount && stateTemp.currentTool !== 0) {
             currentGrid.clickCount++;
-        } else {
+        } else if (stateTemp.currentTool !== 0){
             currentGrid.clickCount = 1;
         }
 
@@ -147,4 +158,36 @@ export default class Garden extends React.Component {
         this.setState(stateTemp);
     }
 
+    /* Operations on a single grid*/
+    gridOptions(mode, gridIndex) {
+        // read current state
+        let stateTemp = JSON.parse(JSON.stringify(this.state));
+
+        // do operations
+        if (mode === 'remove') {
+            stateTemp = this.removeFlower(gridIndex, stateTemp);
+        } else if (mode === 'plant') {
+            stateTemp = this.plantFlower(gridIndex, stateTemp);
+        }
+
+        // save modified state
+        this.setState(stateTemp);
+    }
+    removeFlower(i, state) {
+        alert('Removing grid' + i);
+
+        state.playerInfo.playerName = 'test';
+        state.fieldInfo.grids[i] = {
+            flower: 'none',
+            status: 'normal',
+            growthValue: 0,
+            waterValue: 0
+        };
+        return state;
+    }
+    plantFlower(i, state) {
+        alert('Planting grid' + i);
+        /*TODO*/
+        return state;
+    }
 }

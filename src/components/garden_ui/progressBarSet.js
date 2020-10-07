@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Fade from '@material-ui/core/Fade';
+import {lightBlue, lightGreen} from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
     root: {
@@ -47,9 +48,15 @@ LinearProgressWithLabel.propTypes = {
 
 
 export function LinearWithValueLabel(props) {
+    const theme = createMuiTheme({
+        palette: {
+            primary: lightBlue,
+            secondary: lightGreen,
+        },
+    });
+
     const classes = useStyles();
     const [progress, setProgress] = React.useState(props.pre);
-
 
     React.useEffect(() => {
         setProgress(props.curr);
@@ -57,7 +64,9 @@ export function LinearWithValueLabel(props) {
 
     return (
         <div className={classes.root}>
-            <LinearProgressWithLabel barLabel={props.barLabel} color={props.color} value={progress} />
+            <ThemeProvider theme={theme}>
+                <LinearProgressWithLabel barLabel={props.barLabel} color={props.color} value={progress} />
+            </ThemeProvider>
         </div>
     );
 }

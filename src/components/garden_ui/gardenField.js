@@ -2,6 +2,7 @@ import React from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Grid from '@material-ui/core/Grid';
+import PixelButton from "./PixelButton";
 
 import ProgressBarSet from "./progressBarSet";
 
@@ -131,7 +132,9 @@ export default function GardenField(props){
                                 isSelected={(value === selectedGrid)}
                                 onClick={(target) => props.onClick([value, target])} key={value}
                                 background={gridBackground} outline={gridOutline}
-                                gridInfo={grids[value]}/>
+                                gridInfo={grids[value]}
+                                gridOptions={(mode) => props.gridOptions(mode, value)}
+                            />
                         ))}
                     </Grid>
                 </Grid>
@@ -180,7 +183,7 @@ function GardenFieldGrid(props) {
         // reset transition image
         setTimeout( () => {setStatus(gridInfo.status)}, 2000);
         // reset(hide) status bar
-        setTimeout(() => {setStatusBar(false)}, 1000);
+        setTimeout(() => {setStatusBar(false)}, 2000);
     }, [props.gridInfo.growthValue, props.gridInfo.waterValue, props.gridInfo.clickCount]);
 
     let flowerImageSrc = '';
@@ -202,16 +205,31 @@ function GardenFieldGrid(props) {
         );
     }
 
+    const operationButton = (hasFlower) => {
+        if (hasFlower) return (
+            <PixelButton color='primary'
+                style={{position:'absolute', top: '15%', left: '10%', width: '80%', margin: '0'}}
+            onClick={() => props.gridOptions('remove')}>
+                Remove
+            </PixelButton>
+        );
+        else return (
+            <PixelButton
+                color='secondary'
+                style={{position:'absolute', top: '15%', left: '10%', width: '80%', margin: '0'}}
+            onClick={() => props.gridOptions('plant')}>
+                Plant
+            </PixelButton>
+        );
+    }
+
     return (
         <Grid onClick={(event) => props.onClick(event.currentTarget)} item xs={4} style={{position: 'relative'}}>
             <Box className={classes.filedGrid} style={{position: 'relative'}}>
                 <img style={{maxWidth: '100%', position: 'absolute' , bottom: '35%'}} src={flowerImageSrc}/>
             </Box>
-            {/*<ProgressBarSet className={classes.progressBarSet}*/}
-            {/*                style={{position:'absolute', bottom: '5%', left: '5%'}}*/}
-            {/*                growthValues={[0, props.gridInfo.growthValue]} waterValues={[0, props.gridInfo.waterValue]}>*/}
-            {/*</ProgressBarSet>*/}
             {(statusBar||props.isSelected)?progressBar():null}
+            {props.isSelected?operationButton(gridInfo.flower !== "none"):null}
         </Grid>
     );
 }
