@@ -1,5 +1,5 @@
 import React from 'react'
-import {makeStyles} from "@material-ui/core/styles";
+import {createMuiTheme, makeStyles} from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -7,6 +7,7 @@ import Box from "@material-ui/core/Box";
 import MenuIcon from "@material-ui/icons/Menu";
 import PixelAppBar from "../containers/PixelAppBar";
 import { Link }from 'react-router-dom';
+import {ThemeProvider} from "@material-ui/styles";
 
 const userStyles = makeStyles((theme) => ({
 
@@ -25,29 +26,32 @@ const userStyles = makeStyles((theme) => ({
         color: 'black'
     },
     title: {
-        flexGrow: 1,
-        fontFamily: 'Press Start 2P',
-        fontStyle: 'cursive',
+        // flexGrow: 1,
+        fontFamily: '"Press Start 2P"',
+        // fontStyle: 'cursive',
         color: 'black',
-        fontSize: '0.9em',
+        fontSize: '0.8em',
     },
 }));
+
 
 export default function TopBar(props) {
     const classes = userStyles();
     return(
+
         <PixelAppBar position="fixed" className={classes.topBar}>
-        <Toolbar>
-            <Link to='/homepage'>
-                <IconButton edge="start" className={classes.exitButton} color={"inherit"}>
-                    <ArrowBackIcon />
+            <Toolbar>
+                <Link to='/homepage'>
+                    <IconButton edge="start" className={classes.exitButton} color={"inherit"}>
+                        <ArrowBackIcon />
+                    </IconButton>
+                </Link>
+                <h1 className={classes.title}>{props.title}</h1>
+                <IconButton edge="end" className={classes.menuButton} color="inherit" aria-label="menu">
+                    <MenuIcon />
                 </IconButton>
-            </Link>
-            <Box className={classes.title}>{props.title}</Box>
-            <IconButton edge="end" className={classes.menuButton} color="inherit" aria-label="menu">
-                <MenuIcon />
-            </IconButton>
-        </Toolbar>
-    </PixelAppBar>
+            </Toolbar>
+        </PixelAppBar>
+
     )
 }

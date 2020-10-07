@@ -9,9 +9,7 @@ import {WaterCanIcon} from "../icons/toolIcons";
 import {FertilizerIcon} from "../icons/toolIcons";
 import {SunIcon} from "../icons/toolIcons";
 import {SelectIcon} from "../icons/toolIcons";
-import PanToolIcon from '@material-ui/icons/PanTool';
-import {HomeIcon} from '../icons/toolIcons';
-import {PanTool} from "@material-ui/icons";
+
 
 const useStyles = makeStyles((theme) => ({
     bottomBar: {

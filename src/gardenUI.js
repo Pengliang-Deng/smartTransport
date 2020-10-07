@@ -9,7 +9,6 @@ import GardenToolsBar from "./components/garden_ui/gardenToolsBar";
 import GardenField from "./components/garden_ui/gardenField";
 
 import bgImg from './components/garden_ui/sky.png';
-import GridMenu from "./components/garden_ui/gridMenu";
 
 
 export default class Garden extends React.Component {
@@ -92,7 +91,7 @@ export default class Garden extends React.Component {
                 {/*Title bar on the top*/}
                 <TopBar title={this.state.playerInfo.playerName + "'s Garden"}/>
                 {/*Garden Field*/}
-                <GardenField onClick={(i) => this.handleFieldClick(i)}
+                <GardenField gridOnClick={(i, mode=null) => this.handleFieldClick(i, mode)}
                              fieldInfo={this.state.fieldInfo}
                              selected = {this.state.selected}
                 gridOptions={(mode, gridIndex) => this.gridOptions(mode, gridIndex)}/>
@@ -114,8 +113,7 @@ export default class Garden extends React.Component {
         this.setState(stateTemp);
     }
 
-    handleFieldClick(target) {
-        const i = target[0]; // index of target grid
+    handleFieldClick(i, gridOption=null) {
 
         /* Value increments of items */
         const WATER_INCREMENT = 10;
@@ -123,7 +121,6 @@ export default class Garden extends React.Component {
         const SUN_INCREMENT = 10;
 
         let stateTemp = JSON.parse(JSON.stringify(this.state));
-        let currentGrid = stateTemp.fieldInfo.grids[i];
 
         // record current water and growth values before intended changes happen
         for (let i=0; i < stateTemp.fieldInfo.grids.length; i++) {
@@ -132,37 +129,38 @@ export default class Garden extends React.Component {
         }
 
         if (stateTemp.currentTool === 0) { // SELECT
-            stateTemp.selected = (stateTemp.selected !== i)?i:null;
+            if (gridOption === null) {
+                stateTemp.selected = (stateTemp.selected !== i)?i:null;
+            }
+            else { // plant or remove
+                stateTemp = this.gridOptions(gridOption, i, stateTemp);
+            }
         }
         else if (stateTemp.currentTool === 1) { // FERTILIZER
-            if (currentGrid.flower === "none") {
+            if (stateTemp.fieldInfo.grids[i].flower === "none") {
                 /*TODO*/
-            } else if (currentGrid.growthValue >= 100) {
+            } else if (stateTemp.fieldInfo.grids[i].growthValue >= 100) {
                 /*TODO*/
             } else if (stateTemp.itemsInfo.resources.fertilizer <= 0) {
                 /*TODO*/
             } else { // use fertilizer
-                currentGrid.growthValue = Math.min(100, currentGrid.growthValue + FERTILIZER_INCREMENT);
+                stateTemp.fieldInfo.grids[i].growthValue = Math.min(100, stateTemp.fieldInfo.grids[i].growthValue + FERTILIZER_INCREMENT);
                 stateTemp.itemsInfo.resources.fertilizer = Math.max(0, this.state.itemsInfo.resources.fertilizer - 1)
             }
         }
 
         /* Click detection*/
-        if (currentGrid.clickCount && stateTemp.currentTool !== 0) {
-            currentGrid.clickCount++;
+        if (stateTemp.fieldInfo.grids[i].clickCount && stateTemp.currentTool !== 0) {
+            stateTemp.fieldInfo.grids[i].clickCount++;
         } else if (stateTemp.currentTool !== 0){
-            currentGrid.clickCount = 1;
+            stateTemp.fieldInfo.grids[i].clickCount = 1;
         }
 
-        stateTemp.fieldInfo.grids[i] = currentGrid;
         this.setState(stateTemp);
     }
 
     /* Operations on a single grid*/
-    gridOptions(mode, gridIndex) {
-        // read current state
-        let stateTemp = JSON.parse(JSON.stringify(this.state));
-
+    gridOptions(mode, gridIndex, stateTemp) {
         // do operations
         if (mode === 'remove') {
             stateTemp = this.removeFlower(gridIndex, stateTemp);
@@ -170,13 +168,10 @@ export default class Garden extends React.Component {
             stateTemp = this.plantFlower(gridIndex, stateTemp);
         }
 
-        // save modified state
-        this.setState(stateTemp);
+        // return the modified state
+        return stateTemp;
     }
     removeFlower(i, state) {
-        alert('Removing grid' + i);
-
-        state.playerInfo.playerName = 'test';
         state.fieldInfo.grids[i] = {
             flower: 'none',
             status: 'normal',

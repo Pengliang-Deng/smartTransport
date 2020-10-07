@@ -116,24 +116,25 @@ export default function GardenField(props){
                 height: '80px',
                 backgroundImage: 'url(' + fenceImage + ')',
                 top: theme.spacing(27),
-            }
+            },
         }));
 
         const classes = useStyles();
         const arr = Array.from(Array(props.fieldInfo.size)).map((v, k) => k);
 
         return(
-            <Grid container justify="center" className={classes.field} position="relative" spacing={1}>
-                <Box className={classes.fence} position="absolute"></Box>
+            <Grid container justify="center" className={classes.field} position="relative" spacing={0}>
+                <Box className={classes.fence} position="absolute"/>
                 <Grid item xs={10}>
                     <Grid container justify="center" spacing={4}>
                         {arr.map((value) => (
                             <GardenFieldGrid
                                 isSelected={(value === selectedGrid)}
-                                onClick={(target) => props.onClick([value, target])} key={value}
+                                gridOnClick={() => props.gridOnClick(value)}
+                                key={value}
                                 background={gridBackground} outline={gridOutline}
                                 gridInfo={grids[value]}
-                                gridOptions={(mode) => props.gridOptions(mode, value)}
+                                gridOptions={(mode) => props.gridOnClick(value, mode)}
                             />
                         ))}
                     </Grid>
@@ -209,7 +210,7 @@ function GardenFieldGrid(props) {
         if (hasFlower) return (
             <PixelButton color='primary'
                 style={{position:'absolute', top: '15%', left: '10%', width: '80%', margin: '0'}}
-            onClick={() => props.gridOptions('remove')}>
+            onClick={(e) => {props.gridOptions('remove'); e.stopPropagation();}}>
                 Remove
             </PixelButton>
         );
@@ -217,14 +218,14 @@ function GardenFieldGrid(props) {
             <PixelButton
                 color='secondary'
                 style={{position:'absolute', top: '15%', left: '10%', width: '80%', margin: '0'}}
-            onClick={() => props.gridOptions('plant')}>
+            onClick={(e) => {props.gridOptions('plant'); e.stopPropagation();}}>
                 Plant
             </PixelButton>
         );
     }
 
     return (
-        <Grid onClick={(event) => props.onClick(event.currentTarget)} item xs={4} style={{position: 'relative'}}>
+        <Grid onClick={() => props.gridOnClick()} item xs={4} style={{position: 'relative'}}>
             <Box className={classes.filedGrid} style={{position: 'relative'}}>
                 <img style={{maxWidth: '100%', position: 'absolute' , bottom: '35%'}} src={flowerImageSrc}/>
             </Box>
