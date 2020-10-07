@@ -9,6 +9,7 @@ import GardenToolsBar from "./components/garden_ui/gardenToolsBar";
 import GardenField from "./components/garden_ui/gardenField";
 
 import bgImg from './components/garden_ui/sky.png';
+import PlantDrawer from "./components/garden_ui/plantDrawer";
 
 
 export default class Garden extends React.Component {
@@ -100,6 +101,8 @@ export default class Garden extends React.Component {
                     resourcesNumber={this.state.itemsInfo.resources}
                     currentTool={this.state.currentTool}
                 onClick={(i) => this.handleToolBarClick(i)}/>
+                <PlantDrawer cRef={(ref) => {this.plantDrawer = ref;}}
+                             anchor="bottom"/>
             </Box>
         );
     }
@@ -163,26 +166,26 @@ export default class Garden extends React.Component {
     gridOptions(mode, gridIndex, stateTemp) {
         // do operations
         if (mode === 'remove') {
-            stateTemp = this.removeFlower(gridIndex, stateTemp);
+            const confirmation = window.confirm('Do you want to remove this?');
+            if (confirmation) {
+                stateTemp.fieldInfo.grids[gridIndex] = {
+                    flower: 'none',
+                    status: 'normal',
+                    growthValue: 0,
+                    waterValue: 0
+                };
+            }
         } else if (mode === 'plant') {
-            stateTemp = this.plantFlower(gridIndex, stateTemp);
+            this.plantDrawer.toggle(true);
         }
 
         // return the modified state
         return stateTemp;
     }
-    removeFlower(i, state) {
-        state.fieldInfo.grids[i] = {
-            flower: 'none',
-            status: 'normal',
-            growthValue: 0,
-            waterValue: 0
-        };
-        return state;
+
+    togglePlantDrawer(open) {
     }
-    plantFlower(i, state) {
-        alert('Planting grid' + i);
+    plantFlower(i, flower) {
         /*TODO*/
-        return state;
     }
 }

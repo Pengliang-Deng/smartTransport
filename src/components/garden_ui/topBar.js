@@ -7,7 +7,6 @@ import Box from "@material-ui/core/Box";
 import MenuIcon from "@material-ui/icons/Menu";
 import PixelAppBar from "../containers/PixelAppBar";
 import { Link }from 'react-router-dom';
-import {ThemeProvider} from "@material-ui/styles";
 
 const userStyles = makeStyles((theme) => ({
 
