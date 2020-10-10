@@ -9,10 +9,22 @@ import ProgressBarSet from "./progressBarSet";
 /**
  * Image resources
  */
-import fence from './fence-temp.png';
+//fence
+import fence_wood from './fence/wood.png';
+import fence_stone from './fence/stone.png';
+import fence_metal from './fence/metal.png';
+import fence_wood_premium from './fence/wood_premium.png';
+
 import ground from './ground.png';
 import outline from "../containers/outline.png";
-import brickStone from './brick-stone.png';
+
+//bricks
+import brick_stone from './bricks/brick-stone.png';
+import brick_brown from './bricks/brick-brown.png';
+import brick_flower from './bricks/brick-flower.png';
+import brick_sand from './bricks/brick-sand.png';
+import brick_snow from './bricks/brick-snow.png';
+import brick_grass from './bricks/brick-grass.png';
 // Flowers
 import eustoma from './flowers/eustoma.gif';
 import eustomaGrowth from './flowers/eustoma-growth.gif';
@@ -21,25 +33,55 @@ import roseGrowth from './flowers/rose-growth.gif';
 import tulip from './flowers/tulip.gif';
 import tulipGrowth from './flowers/tulip-growth.gif'
 import seedling from './flowers/small-animation.gif';
+import cow from './flowers/cow.gif';
+import pumpkin from './flowers/pumpkin.gif';
+import dandelion from './flowers/dandelion.gif';
+import dry_big from './flowers/dry-big.png';
+import dry_small from './flowers/dry-small.png';
+
 // Indexes
 const fieldImages = {
     flowers: {
         'eustoma': {
             'normal': eustoma,
-            'growth':  eustomaGrowth
+            'growth':  eustomaGrowth,
+            'revived': eustomaGrowth,
         },
         'rose': {
             'normal': rose,
-            'growth': roseGrowth
+            'growth': roseGrowth,
+            'revived': roseGrowth,
         },
         'tulip': {
             'normal': tulip,
-            'growth': tulipGrowth
+            'growth': tulipGrowth,
+            'revived': tulipGrowth,
         },
+        'cow': {
+            'normal': cow,
+            'growth': cow,
+            'revived': cow,
+        },
+        'pumpkin': {
+            'normal': pumpkin,
+            'growth': pumpkin,
+            'revived': pumpkin,
+        },
+        'dandelion': {
+            'normal': dandelion,
+            'growth': dandelion,
+            'revived': pumpkin,
+        },
+        'dry': [dry_big, dry_small],
         'seedling': seedling
     },
     tileBackground: {
-        'stone-brick': brickStone,
+        'stone-brick': brick_stone,
+        'brown': brick_brown,
+        'flower': brick_flower,
+        'sand': brick_sand,
+        'snow': brick_snow,
+        'grass':brick_grass,
     },
     gridBackground: {
         'normal': ground,
@@ -48,7 +90,10 @@ const fieldImages = {
         'normal': outline,
     },
     fenceImage: {
-        'normal': fence,
+        'normal': fence_wood,
+        'stone': fence_stone,
+        'metal': fence_metal,
+        'wood-premium': fence_wood_premium,
     }
 }
 
@@ -113,9 +158,9 @@ export default function GardenField(props){
             },
             fence: {
                 width: '100%',
-                height: '80px',
+                height: '50px',
                 backgroundImage: 'url(' + fenceImage + ')',
-                top: theme.spacing(27),
+                top: theme.spacing(28),
             },
         }));
 
@@ -190,9 +235,9 @@ function GardenFieldGrid(props) {
     let flowerImageSrc = '';
     if (gridInfo.flower !== 'none') {
         if (gridInfo.growthValue < 100) {
-            flowerImageSrc = fieldImages.flowers["seedling"];
+            flowerImageSrc = (gridInfo.waterValue >= 30) ? fieldImages.flowers["seedling"] : fieldImages.flowers["dry"][1];
         } else {
-            flowerImageSrc = fieldImages.flowers[gridInfo.flower][status];
+            flowerImageSrc = (gridInfo.waterValue >= 30) ? fieldImages.flowers[gridInfo.flower][status] : fieldImages.flowers["dry"][0];
         }
     }
 

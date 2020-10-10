@@ -95,14 +95,19 @@ export default class Garden extends React.Component {
                 <GardenField gridOnClick={(i, mode=null) => this.handleFieldClick(i, mode)}
                              fieldInfo={this.state.fieldInfo}
                              selected = {this.state.selected}
-                gridOptions={(mode, gridIndex) => this.gridOptions(mode, gridIndex)}/>
+                    gridOptions={(mode, gridIndex) => this.gridOptions(mode, gridIndex)}
+                />
                 {/*Tools Bar*/}
                 <GardenToolsBar
                     resourcesNumber={this.state.itemsInfo.resources}
                     currentTool={this.state.currentTool}
-                onClick={(i) => this.handleToolBarClick(i)}/>
+                    onClick={(i) => this.handleToolBarClick(i)}
+                />
                 <PlantDrawer cRef={(ref) => {this.plantDrawer = ref;}}
-                             anchor="bottom"/>
+                             anchor="bottom"
+                             seedsList={this.state.itemsInfo.seeds}
+                             plantAction={(flower) => this.plantFlower(flower)}
+                />
             </Box>
         );
     }
@@ -120,6 +125,7 @@ export default class Garden extends React.Component {
 
         /* Value increments of items */
         const WATER_INCREMENT = 10;
+        const WATER_DECREMENT = -3;
         const FERTILIZER_INCREMENT = 10;
         const SUN_INCREMENT = 10;
 
@@ -142,13 +148,22 @@ export default class Garden extends React.Component {
         else if (stateTemp.currentTool === 1) { // FERTILIZER
             if (stateTemp.fieldInfo.grids[i].flower === "none") {
                 /*TODO*/
-            } else if (stateTemp.fieldInfo.grids[i].growthValue >= 100) {
-                /*TODO*/
             } else if (stateTemp.itemsInfo.resources.fertilizer <= 0) {
                 /*TODO*/
             } else { // use fertilizer
                 stateTemp.fieldInfo.grids[i].growthValue = Math.min(100, stateTemp.fieldInfo.grids[i].growthValue + FERTILIZER_INCREMENT);
+                stateTemp.fieldInfo.grids[i].waterValue = Math.min(100, stateTemp.fieldInfo.grids[i].waterValue + WATER_DECREMENT);
                 stateTemp.itemsInfo.resources.fertilizer = Math.max(0, this.state.itemsInfo.resources.fertilizer - 1)
+            }
+        }
+        else if (stateTemp.currentTool === 2) { // WATER
+            if (stateTemp.fieldInfo.grids[i].flower === "none") {
+                /*TODO*/
+            } else if (stateTemp.itemsInfo.resources.water <= 0) {
+                /*TODO*/
+            } else { // use water
+                stateTemp.fieldInfo.grids[i].waterValue = Math.min(100, stateTemp.fieldInfo.grids[i].waterValue + WATER_INCREMENT);
+                stateTemp.itemsInfo.resources.water = Math.max(0, this.state.itemsInfo.resources.water - 1)
             }
         }
 
@@ -183,9 +198,44 @@ export default class Garden extends React.Component {
         return stateTemp;
     }
 
-    togglePlantDrawer(open) {
-    }
-    plantFlower(i, flower) {
-        /*TODO*/
+    plantFlower(flower) {
+        const SPECIAL_RATE = 0.7
+        const COMMON_FLOWERS = ['eustoma', 'tulip', 'rose'];
+        const SPECIAL_FLOWERS = ['cow', 'dandelion', 'pumpkin'];
+
+        let stateTemp = JSON.parse(JSON.stringify(this.state));
+        let selectedGrid = stateTemp.fieldInfo.grids[this.state.selected];
+        // Invalid target grid
+        if (!selectedGrid || selectedGrid.flower !== 'none') {
+            alert('You cannot plant here');
+            return ;
+        }
+        // No enough seed
+        if (stateTemp.itemsInfo.seeds[flower] <= 0) {
+            alert('No ' + flower + ' seed');
+            return ;
+        }
+
+        const confirmation = window.confirm('Are you sure you want to plant ' + flower + ' here?')
+        if (confirmation) {
+
+            stateTemp.itemsInfo.seeds[flower] = stateTemp.itemsInfo.seeds[flower] - 1;
+            if (flower === "mystery") {
+                const isSpecial = (Math.random() <= SPECIAL_RATE);
+                let candidates = (isSpecial)?SPECIAL_FLOWERS:COMMON_FLOWERS;
+                flower = candidates[Math.floor(Math.random() * candidates.length)];
+            }
+
+            selectedGrid = {
+                flower: flower,
+                status: 'normal',
+                growthValue: 10,
+                waterValue: 34
+            };
+            stateTemp.fieldInfo.grids[this.state.selected] = selectedGrid;
+            this.setState(stateTemp);
+            // confirmation and plant
+            this.plantDrawer.toggle(false);
+        }
     }
 }
