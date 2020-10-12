@@ -1,75 +1,160 @@
-import React from 'react';
-import {
-    withScriptjs,
-    withGoogleMap,
-    GoogleMap,
-    InfoWindow,
-    Marker,
-} from "react-google-maps";
+import React, { Component } from 'react';
+import { GoogleMap, LoadScript, Autocomplete, Marker, 
+    DirectionsService, DirectionsRenderer, 
+    DistanceMatrixService } from '@react-google-maps/api';
 import Geocode from "react-geocode";
-// import { Descriptions, Input } from 'antd';
-// import PixelTypography from './PixelTypography';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-// import TextField from '@material-ui/core/TextField';
-import AutoComplete from "react-google-autocomplete";
-import BtmNav from './BtmNav'
-
+//import { render } from '@testing-library/react';
 
 Geocode.setApiKey("AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM")
 
-const styles = {
-    marginT: {marginTop: 2, marginBottom: 8}
-}
+const containerStyle = {
+  width: '500px',
+  height: '700px'
+};
 
-
-export default class Tracker extends React.Component {
-
-    state = {
-        address: '',
-        city: '',
-        area: '',
-        state: '',
-        zoom: 15,
-        height: 200,
-        mapPosition: {
-            lat: 0,
-            lng: 0,
-        },
-        markerPosition: {
-            lat: 0,
-            lng: 0,
-        },
+class Tracker extends Component {
+    constructor (props) {
+        super(props)
+        this.autocomplete = null
+        this.onLoad = this.onLoad.bind(this)
+        this.onPlaceChanged = this.onPlaceChanged.bind(this)
+        this.state = {
+            address: '',
+            city: '',
+            area: '',
+            state: '',
+            zoom: 15,
+            height: 200,
+            mapPosition: {
+                lat: 0,
+                lng: 0,
+            },
+            markerPosition: {
+                lat: 0,
+                lng: 0,
+            },
+            response: null,
+            travelMode: 'WALKING',
+            origin: '',
+            destination: ''
+        }
+        this.directionsCallback = this.directionsCallback.bind(this)
+        this.checkDriving = this.checkDriving.bind(this)
+        this.checkBicycling = this.checkBicycling.bind(this)
+        this.checkTransit = this.checkTransit.bind(this)
+        this.checkWalking = this.checkWalking.bind(this)
+        this.getOrigin = this.getOrigin.bind(this)
+        this.getDestination = this.getDestination.bind(this)
+        this.onClick = this.onClick.bind(this)
+        this.onMapClick = this.onMapClick.bind(this)
     }
+
+    directionsCallback (response) {
+        console.log(response)
+
+        if (response !== null) {
+            if (response.status === 'OK') {
+                this.setState(
+                    () => ({
+                    response
+                    })
+                )
+            } else {
+                console.log('response: ', response)
+            }
+        }
+    }
+
+    checkDriving ({ target: { checked } }) {
+        checked && 
+            this.setState(
+                () => ({
+                    travelMode: 'DRIVING'
+                })
+            )
+    }
+
+    checkBicycling ({ target: { checked } }) {
+        checked && 
+            this.setState(
+                () => ({
+                    travelMode: 'BICYCLING'
+                })
+            )
+    }
+
+    checkTransit ({ target: { checked } }) {
+        checked && 
+            this.setState(
+                () => ({
+                    travelMode: 'TRANSIT'
+                })
+            )
+    }
+
+    checkWalking ({ target: { checked } }) {
+        checked && 
+            this.setState(
+                () => ({
+                    travelMode: 'WALKING'
+                })
+            )
+    }
+
+    getOrigin (ref) {
+        this.origin = ref
+    }
+    
+    getDestination (ref) {
+        this.destination = ref
+    }
+
+    onClick () {
+        if (this.origin.value !== '' && this.destination.value !== '') {
+            this.setState(
+                () => ({
+                    origin: this.origin.value,
+                    destination: this.destination.value
+                })
+            )
+        }
+    }
+
+    onMapClick (...args) {
+        console.log('onClick args: ', args)
+    }
+
+
+    
 
     componentDidMount() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                this.setState({
-                    mapPosition: {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    },
-                    markerPosition: {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    }
-                },
-                    () => {
-                        Geocode.fromLatLng(position.coords.latitude, position.coords.longitude).then(
-                            response => {
-                                console.log(response)
-                                const address = response.results[0].formatted_address,
-                                    addressArray = response.results[0].address_components,
-                                    city = this.getCity(addressArray),
-                                    area = this.getArea(addressArray),
-                                    state = this.getState(addressArray);
-                                console.log('city', city, area, state);
-                                this.setState({
-                                    address: (address) ? address : '',
-                                    area: (area) ? area : '',
-                                    city: (city) ? city : '',
-                                    state: (state) ? state : '',
+        navigator.geolocation.getCurrentPosition(position => {
+            this.setState({
+            mapPosition: {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+            },
+            markerPosition: {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+            }
+            },
+            () => {
+                Geocode.fromLatLng(position.coords.latitude, position.coords.longitude).then(
+                response => {
+                    console.log(response)
+                    const address = response.results[0].formatted_address,
+                    addressArray = response.results[0].address_components,
+                    city = this.getCity(addressArray),
+                    area = this.getArea(addressArray),
+                    state = this.getState(addressArray);
+                    console.log('city', city, area, state);
+                    this.setState({
+                        address: (address) ? address : '',
+                        area: (area) ? area : '',
+                        city: (city) ? city : '',
+                        state: (state) ? state : '',
                                 })
                             },
                             error => {
@@ -84,7 +169,7 @@ export default class Tracker extends React.Component {
 
     getCity = (addressArray) => {
         let city = '';
-        for (let i = 0; i < addressArray.length; i++){
+        for (let i = 0; i<addressArray.length; i++) {
             if (addressArray[i].types[0] && 'administrative_area_level_2' === addressArray[i].types[0]) {
                 city = addressArray[i].long_name;
                 return city;
@@ -119,152 +204,176 @@ export default class Tracker extends React.Component {
     }
 
 
-    onMarkerDragEnd = (event) => {
-        let newLat = event.latLng.lat();
-        let newLng = event.latLng.lng();
-        
-        Geocode.fromLatLng(newLat, newLng)
-         .then(response => {
-            console.log('response', response) 
-            const address = response.results[0].formatted_address,
-                  addressArray = response.results[0].address_components,
-                  city = this.getCity(addressArray),
-                  area = this.getArea(addressArray),
-                  state = this.getState(addressArray);
-            this.setState({
-                address: (address) ? address : "",
-                city: (city) ? area : "",
-                area: (area) ? area : "",
-                state: (state) ? state: "",
-                markerPosition : {
-                    lat: newLat,
-                    lng: newLng, 
-                },
-                mapPosition : {
-                    lat: newLat,
-                    lng: newLng, 
-                },
-            })
-         })
-         .catch(err => {
-             console.log(err)
-         })
+
+
+    //TODO
+    onLoad (autocomplete) {
+        console.log('autocomplete: ', autocomplete)
+
+        this.autocomplete = autocomplete
     }
-
-    onPlaceSelected = ( place ) => {
-        // console.log(place)
-        try {
-            const address = place.formatted_address,
-                addressArray = place.address_components,
-                city = this.getCity( addressArray),
-                area = this.getArea(addressArray),
-                state = this.getState(addressArray),
-                newLat = place.geometry.location.lat(),
-                newLng = place.geometry.location.lng();
-
-
-            this.setState({
-                address: (address) ? address : "",
-                city: (city) ? area : "",
-                area: (area) ? area : "",
-                state: (state) ? state: "",
-                markerPosition : {
-                    lat: newLat,
-                    lng: newLng, 
-                },
-                mapPosition : {
-                    lat: newLat,
-                    lng: newLng, 
-                },
-            })
-        } catch (err) {
-            console.log(err)
+    //TODO
+    onPlaceChanged () {
+        if (this.autocomplete !== null) {
+        console.log(this.autocomplete.getPlace())
+        } else {
+        console.log('Autocomplete is not loaded yet!')
         }
-      
     }
 
-    render() {
-        const MapWithAMarker = withScriptjs(withGoogleMap(props =>
-            <GoogleMap
-                defaultZoom={15}
-                defaultCenter={{ lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng }}
-            >
-                <AutoComplete
-                            style={{
-                                width: '96%',
-                                height: '40px',
-                                paddingLeft: '16px',
-                                marginTop: '10px',
-                                marginBottom: '2rem'
-                            }}
-                            onPlaceSelected={this.onPlaceSelected}
-                            types={['(regions)']}
-                 />
-                <Marker
-                    //google={this.props.google}
-                    draggable={true}
-                    onDragEnd={this.onMarkerDragEnd}
-                    position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }}
-                 >
-                    <InfoWindow>
-                        <div>
-                            {this.state.address}
-                        </div>
-                    </InfoWindow>
-                </Marker>
-          </GoogleMap>
-      ));
+    render () {
     return (
+        <div className = 'map'>
+            <div className='map-settings'>
+                <hr className='mt-0 mb-3' />
 
-        <div style={{ padding: '1rem', margin: '0 auto', maxWidth: 700 }}>
-            
-            <Grid container direction="column" justify="center" alignItems="center">
-                <Grid item style={styles.marginT} >
-                    {/* <PixelTypography text='Smart Transport' variant='h4' /> */}
-                    <Typography variant='h4'>Smart Transport</Typography>
-                </Grid>
-                <Grid item style={styles.marginT}>
-                    {/* <PixelTypography text={`City: `+ this.state.city} variant='h7' /> */}
-                    <Typography variant='h7'>{`City: `+ this.state.city}</Typography>
-                </Grid>
-                <Grid item style={styles.marginT} >
-                    {/* <PixelTypography text={`Area: `+ this.state.area} variant='h7' /> */}
-                    <Typography variant='h7'>{`Area: `+ this.state.area}</Typography>
-                </Grid>
-                <Grid item style={styles.marginT} >
-                    {/* <PixelTypography text={`State: `+ this.state.state} variant='h7' /> */}
-                    <Typography variant='h7'>{`State: `+ this.state.state}</Typography>
-                </Grid>
-                <Grid item style={styles.marginT} >
-                    {/* <PixelTypography text={`Address: `+ this.state.address} variant ='h7' /> */}
-                    <Typography variant='h7'>{`Address: `+ this.state.address}</Typography>
-                </Grid>
-            </Grid>
+                <div className='row'>
+                    <div className='col-md-6 col-lg-4'>
+                        <div className='form-group'>
+                            <label htmlFor='ORIGIN'>Origin</label>
+                            <br />
+                            <input id='ORIGIN' className='form-control' type='text' ref={this.getOrigin} />
+                        </div>
+                    </div>
 
-            {/* <Descriptions bordered size = 'small'>
-                <Descriptions.Item label="City">{this.state.city}</Descriptions.Item>
-                <Descriptions.Item label="Area">{this.state.area}</Descriptions.Item>
-                <Descriptions.Item label="State">{this.state.state}</Descriptions.Item>
-                <Descriptions.Item label="Address" span={2}>
-                    {this.state.address}
-                </Descriptions.Item>
-            </Descriptions> */}
-            
-            {/* <Input placeholder="Search">
-            </Input> */}
+                    <div className='col-md-6 col-lg-4'>
+                        <div className='form-group'>
+                            <label htmlFor='DESTINATION'>Destination</label>
+                            <br />
+                            <input id='DESTINATION' className='form-control' type='text' ref={this.getDestination} />
+                        </div>
+                    </div>
+                </div>
 
-            <MapWithAMarker
-              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM&v=3.exp&libraries=geometry,drawing,places"
-              loadingElement={<div style={{ height: `100%` }} />}
-              containerElement={<div style={{ height: `400px` }} />}
-              mapElement={<div style={{ height: `100%` }} />}
-            />
+                <div className='d-flex flex-wrap'>
+                    <div className='form-group custom-control custom-radio mr-4'>
+                        <input
+                            id='DRIVING'
+                            className='custom-control-input'
+                            name='travelMode'
+                            type='radio'
+                            checked={this.state.travelMode === 'DRIVING'}
+                            onChange={this.checkDriving}
+                        />
+                        <label className='custom-control-label' htmlFor='DRIVING'>Driving</label>
+                    </div>
 
-            <BtmNav />
+                    <div className='form-group custom-control custom-radio mr-4'>
+                    <input
+                        id='BICYCLING'
+                        className='custom-control-input'
+                        name='travelMode'
+                        type='radio'
+                        checked={this.state.travelMode === 'BICYCLING'}
+                        onChange={this.checkBicycling}
+                    />
+                    <label className='custom-control-label' htmlFor='BICYCLING'>Bicycling</label>
+                    </div>
+
+                    <div className='form-group custom-control custom-radio mr-4'>
+                    <input
+                        id='TRANSIT'
+                        className='custom-control-input'
+                        name='travelMode'
+                        type='radio'
+                        checked={this.state.travelMode === 'TRANSIT'}
+                        onChange={this.checkTransit}
+                    />
+                    <label className='custom-control-label' htmlFor='TRANSIT'>Transit</label>
+                    </div>
+
+                    <div className='form-group custom-control custom-radio mr-4'>
+                    <input
+                        id='WALKING'
+                        className='custom-control-input'
+                        name='travelMode'
+                        type='radio'
+                        checked={this.state.travelMode === 'WALKING'}
+                        onChange={this.checkWalking}
+                    />
+                    <label className='custom-control-label' htmlFor='WALKING'>Walking</label>
+                    </div>
+                </div>
+
+                <button className='btn btn-primary' type='button' onClick={this.onClick}>
+                    Build Route
+                </button>
+            </div>
+            <div className = 'map-container'>
+                <LoadScript
+                    googleMapsApiKey="AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM"
+                    libraries = {['places']}
+                >
+                <GoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={{lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng}}
+                    zoom={15}
+                >
+                {
+                    (
+                        this.state.destination !== '' &&
+                        this.state.origin !== ''
+                    ) && (
+                        <DirectionsService
+                            options={{ 
+                                
+                                destination: this.state.destination,
+                                origin: this.state.origin,
+                                travelMode: this.state.travelMode
+                            }}
+                            callback={this.directionsCallback}
+                        />
+                    )
+                    }
+
+                    {
+                    this.state.response !== null && (
+                        <DirectionsRenderer
+                            options={{ 
+                                
+                                directions: this.state.response
+                            }}
+                        />
+                    )
+                    }
+                    <Autocomplete
+                    onLoad={this.onLoad}
+                    onPlaceChanged={this.onPlaceChanged}
+                    >
+                    <input
+                        type="text"
+                        placeholder="Seach Address"
+                        style={{
+                        boxSizing: `border-box`,
+                        border: `1px solid transparent`,
+                        width: `240px`,
+                        height: `32px`,
+                        padding: `0 12px`,
+                        borderRadius: `3px`,
+                        boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                        fontSize: `14px`,
+                        outline: `none`,
+                        textOverflow: `ellipses`,
+                        position: "fixed",
+                        left: "50%",
+                        marginLeft: "-120px"
+                        }}
+                    />
+                    </Autocomplete>
+                    <Marker
+                        draggable = {true}
+                        position = {{lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng}}
+                    />
+                </GoogleMap>
+                </LoadScript>
+            </div>  
         </div>
         
-    );
-  }
+    )
+    }
+
 }
+
+export default React.memo(Tracker);
 
 
