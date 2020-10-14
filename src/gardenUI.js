@@ -127,7 +127,8 @@ export default class Garden extends React.Component {
         const WATER_INCREMENT = 10;
         const WATER_DECREMENT = -3;
         const FERTILIZER_INCREMENT = 10;
-        const SUN_INCREMENT = 10;
+        const SUN_INCREMENT = 3;
+        const SUN_WATER_INCREAMENT = -1;
 
         let stateTemp = JSON.parse(JSON.stringify(this.state));
 
@@ -147,23 +148,49 @@ export default class Garden extends React.Component {
         }
         else if (stateTemp.currentTool === 1) { // FERTILIZER
             if (stateTemp.fieldInfo.grids[i].flower === "none") {
-                /*TODO*/
+                window.alert("No flower here");
             } else if (stateTemp.itemsInfo.resources.fertilizer <= 0) {
-                /*TODO*/
+                window.alert("Your fertilizer has been used up");
             } else { // use fertilizer
                 stateTemp.fieldInfo.grids[i].growthValue = Math.min(100, stateTemp.fieldInfo.grids[i].growthValue + FERTILIZER_INCREMENT);
                 stateTemp.fieldInfo.grids[i].waterValue = Math.min(100, stateTemp.fieldInfo.grids[i].waterValue + WATER_DECREMENT);
-                stateTemp.itemsInfo.resources.fertilizer = Math.max(0, this.state.itemsInfo.resources.fertilizer - 1)
+                stateTemp.itemsInfo.resources.fertilizer = Math.max(0, this.state.itemsInfo.resources.fertilizer - 1);
+                /* Click detection (fertilizer)*/
+                if (stateTemp.fieldInfo.grids[i].ferClickCount) {
+                    stateTemp.fieldInfo.grids[i].ferClickCount++;
+                } else {
+                    stateTemp.fieldInfo.grids[i].ferClickCount = 1;
+                }
             }
         }
         else if (stateTemp.currentTool === 2) { // WATER
             if (stateTemp.fieldInfo.grids[i].flower === "none") {
-                /*TODO*/
+                window.alert("No flower here");
             } else if (stateTemp.itemsInfo.resources.water <= 0) {
-                /*TODO*/
+                window.alert("Run out of water");
             } else { // use water
                 stateTemp.fieldInfo.grids[i].waterValue = Math.min(100, stateTemp.fieldInfo.grids[i].waterValue + WATER_INCREMENT);
-                stateTemp.itemsInfo.resources.water = Math.max(0, this.state.itemsInfo.resources.water - 1)
+                stateTemp.itemsInfo.resources.water = Math.max(0, this.state.itemsInfo.resources.water - 1);
+                /* Click detection (water)*/
+                if (stateTemp.fieldInfo.grids[i].waterClickCount) {
+                    stateTemp.fieldInfo.grids[i].waterClickCount++;
+                } else {
+                    stateTemp.fieldInfo.grids[i].waterClickCount = 1;
+                }
+            }
+        }
+        else if (stateTemp.currentTool === 3) {
+            /* Click detection (sun)*/
+            if (stateTemp.fieldInfo.sunClickCount) {
+                stateTemp.fieldInfo.sunClickCount++;
+            } else {
+                stateTemp.fieldInfo.sunClickCount = 1;
+            }
+
+            for (let j=0; j<stateTemp.fieldInfo.size; j++) {
+                if (stateTemp.fieldInfo.grids[j].flower === "none") continue;
+                stateTemp.fieldInfo.grids[j].growthValue = Math.min(100, stateTemp.fieldInfo.grids[j].growthValue + SUN_INCREMENT);
+                stateTemp.fieldInfo.grids[j].waterValue = Math.min(100, stateTemp.fieldInfo.grids[j].waterValue + SUN_WATER_INCREAMENT);
             }
         }
 

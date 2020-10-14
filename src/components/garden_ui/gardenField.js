@@ -38,6 +38,10 @@ import pumpkin from './flowers/pumpkin.gif';
 import dandelion from './flowers/dandelion.gif';
 import dry_big from './flowers/dry-big.png';
 import dry_small from './flowers/dry-small.png';
+// action animations
+import water_animation from './animation_gif/water-ani.gif';
+import fer_animation from './animation_gif/fertilizer-ani.gif';
+import sun_animation from './animation_gif/sun-ani.gif';
 
 // Indexes
 const fieldImages = {
@@ -98,47 +102,6 @@ const fieldImages = {
 }
 
 
-// export default class GardenField extends React.Component{
-//     fieldGridRender(props, i) {
-//         let gridBackground = fieldImages.gridBackground[props.fieldInfo.gridBackground];
-//         let gridOutline = fieldImages.gridOutline[props.fieldInfo.gridOutline];
-//         const grids = props.fieldInfo.grids;
-//
-//         return (
-//             <GardenFieldGrid onClick={() => props.onClick(i)}
-//                              key={i} background={gridBackground}
-//                              outline={gridOutline} gridInfo={grids[i]}/>
-//             );
-//     }
-//
-//     render() {
-//         let tileBackground = fieldImages.tileBackground[this.props.fieldInfo.tileBackground];
-//         let fenceImage = fieldImages.fenceImage[this.props.fieldInfo.fenceImage];
-//         let renderedGrids = [];
-//         for (let i = 0; i < this.props.fieldInfo.grids.length; i++) {
-//             renderedGrids.push(this.fieldGridRender(this.props, i));
-//         }
-//
-//         return(
-//             <Grid container justify="center" className='field'
-//                   paddingTop={4} paddingBottom={19} flexGrow={1}
-//                   backgroundImage={tileBackground}
-//                   backgroundRepeat={"repeat"}
-//                   position="relative" spacing={1}>
-//                 <Box className="fence" position="absolute"
-//                      width={"100%"} height={'80px'}
-//                      backgroundImage={fenceImage} top={27}/>
-//                 <Grid item xs={10}>
-//                     <Grid container justify="center" spacing={4}>
-//                         {renderedGrids}
-//                     </Grid>
-//                 </Grid>
-//             </Grid>
-//         )
-//     }
-//
-// }
-
 export default function GardenField(props){
     const tileBackground = fieldImages.tileBackground[props.fieldInfo.tileBackground];
     const fenceImage = fieldImages.fenceImage[props.fieldInfo.fenceImage];
@@ -147,26 +110,44 @@ export default function GardenField(props){
     const grids = props.fieldInfo.grids;
     const selectedGrid = props.selected;
 
-        const useStyles = makeStyles((theme) => ({
-            field: {
-                flexGrow: 1,
-                // marginTop: theme.spacing(1),
-                paddingTop: theme.spacing(4),
-                paddingBottom: theme.spacing(19),
-                backgroundImage: 'url(' + tileBackground + ')',
-                backgroundRepeat: 'repeat',
-            },
-            fence: {
-                width: '100%',
-                height: '50px',
-                backgroundImage: 'url(' + fenceImage + ')',
-                top: theme.spacing(28),
-            },
-        }));
+    const useStyles = makeStyles((theme) => ({
+        field: {
+            flexGrow: 1,
+            // marginTop: theme.spacing(1),
+            paddingTop: theme.spacing(4),
+            paddingBottom: theme.spacing(19),
+            backgroundImage: 'url(' + tileBackground + ')',
+            backgroundRepeat: 'repeat',
+        },
+        fence: {
+            width: '100%',
+            height: '50px',
+            backgroundImage: 'url(' + fenceImage + ')',
+            top: theme.spacing(28),
+        },
+    }));
 
-        const classes = useStyles();
-        const arr = Array.from(Array(props.fieldInfo.size)).map((v, k) => k);
+    const sunAni = (show) => {
+        if (show) return (
+            <img alt="sum animation" src={sun_animation}
+                 style={{position: "absolute", top: "15%", left: "10%", maxWidth: "100%"}}
+            />
+        );
+        else return null;
+    };
 
+    /* handle sun animation */
+    const[sun_animation_display, setAni] = React.useState(false); // water/fertilizer animation or nothing
+    React.useEffect(() => {
+        if (!props.fieldInfo.sunClickCount) return ;
+        setAni(true); // set water animation
+        const timer = setTimeout(() => {setAni(false)}, 1500); // reset(close) animation
+
+        return () => clearTimeout(timer);
+    }, [props.fieldInfo.sunClickCount]);
+
+    const classes = useStyles();
+    const arr = Array.from(Array(props.fieldInfo.size)).map((v, k) => k);
         return(
             <Grid container justify="center" className={classes.field} position="relative" spacing={0}>
                 <Box className={classes.fence} position="absolute"/>
@@ -184,6 +165,7 @@ export default function GardenField(props){
                         ))}
                     </Grid>
                 </Grid>
+                {sunAni(sun_animation_display)}
             </Grid>
         )
 }
@@ -216,21 +198,45 @@ function GardenFieldGrid(props) {
     const gridInfo = props.gridInfo;
     /* set the animation of growth, water and selection */
 
-    const [statusBar, setStatusBar] = React.useState(false);
-    const[status, setStatus] = React.useState(gridInfo.status);
+    /* handle flower status */
+    const[status, setStatus] = React.useState(gridInfo.status); // normal/growing/revived status
     React.useEffect(() => {
         if (gridInfo.preGrowthValue < 100 && gridInfo.growthValue >= 100) {
             setStatus('growth'); // show growth animation when growing
         } else if (gridInfo.preWaterValue < 50 && gridInfo.waterValue >= 50) {
             setStatus('revived'); // show reviving animation when flower is watered
         }
+        // reset transition image
+        const timer = setTimeout( () => {setStatus(gridInfo.status)}, 2000);
+        return () => clearTimeout(timer);
+    }, [props.gridInfo.growthValue, props.gridInfo.waterValue]);
+
+    /* handle status bar show */
+    const [statusBar, setStatusBar] = React.useState(false); // status bar shown/hidden
+    React.useEffect(() => {
         // show status bar when status changes
         setStatusBar(true);
-        // reset transition image
-        setTimeout( () => {setStatus(gridInfo.status)}, 2000);
         // reset(hide) status bar
-        setTimeout(() => {setStatusBar(false)}, 2000);
-    }, [props.gridInfo.growthValue, props.gridInfo.waterValue, props.gridInfo.clickCount]);
+        const timer = setTimeout(() => {setStatusBar(false)}, 2000);
+        return () => clearTimeout(timer);
+    }, [props.gridInfo.clickCount, props.gridInfo.growthValue, props.gridInfo.waterValue]);
+
+    /* handle water/fertilizer animation */
+    const[animation_type, setAni] = React.useState('none'); // water/fertilizer animation or nothing
+    // water ani
+    React.useEffect(() => {
+        if (!props.gridInfo.waterClickCount) return ;
+        setAni('water'); // set water animation
+        const timer = setTimeout(() => {setAni('none')}, 1000); // reset(close) animation
+        return () => clearTimeout(timer);
+    }, [props.gridInfo.waterClickCount]);
+    // fertilizer ani
+    React.useEffect(() => {
+        if (!props.gridInfo.ferClickCount) return ;
+        setAni('fertilizer'); // set water animation
+        const timer = setTimeout(() => {setAni('none')}, 1000); // reset(close) animation
+        return () => clearTimeout(timer);
+    }, [props.gridInfo.ferClickCount]);
 
     let flowerImageSrc = '';
     if (gridInfo.flower !== 'none') {
@@ -269,6 +275,24 @@ function GardenFieldGrid(props) {
         );
     }
 
+    const waterFertilizerAnimation = (animationType) => {
+        if (animationType === 'water') {
+            return (
+                <img alt="water_animation" src={water_animation}
+                     style={{position:'absolute', top: '0', left: '25%', maxWidth: '80%', margin: '0'}}
+                />
+            )
+        }
+        else if (animationType === 'fertilizer') {
+            return (
+                <img alt="fertilizer_animation" src={fer_animation}
+                     style={{position:'absolute', top: '0', left: '25%', maxWidth: '80%', margin: '0'}}
+                />
+            )
+        }
+        else return null;
+    }
+
     return (
         <Grid onClick={() => props.gridOnClick()} item xs={4} style={{position: 'relative'}}>
             <Box className={classes.filedGrid} style={{position: 'relative'}}>
@@ -276,6 +300,7 @@ function GardenFieldGrid(props) {
             </Box>
             {(statusBar||props.isSelected)?progressBar():null}
             {props.isSelected?operationButton(gridInfo.flower !== "none"):null}
+            {waterFertilizerAnimation(animation_type)}
         </Grid>
     );
 }
