@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Fade from '@material-ui/core/Fade';
+import {lightBlue, lightGreen} from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
     root: {
@@ -12,9 +13,7 @@ const useStyles = makeStyles({
         height: '17px',
     },
     lp: {
-        colorPrimary: '#000000',
         height: '5px',
-        color: '#000000',
         border: '5px solid black'
     }
 });
@@ -29,11 +28,11 @@ function LinearProgressWithLabel(props) {
             <Box width="100%" mr={1}>
                 <LinearProgress className={classes.lp} variant="determinate" {...props} />
             </Box>
-            {/*<Box minWidth={35}>*/}
-            {/*    <Typography variant="body2" color="textSecondary">{`${Math.round(*/}
-            {/*        props.value,*/}
-            {/*    )}%`}</Typography>*/}
-            {/*</Box>*/}
+            <Box minWidth={30}>
+                <Typography variant="body2" color="textSecondary">{`${Math.round(
+                    props.value,
+                )}%`}</Typography>
+            </Box>
         </Box>
     );
 }
@@ -49,17 +48,25 @@ LinearProgressWithLabel.propTypes = {
 
 
 export function LinearWithValueLabel(props) {
+    const theme = createMuiTheme({
+        palette: {
+            primary: lightBlue,
+            secondary: lightGreen,
+        },
+    });
+
     const classes = useStyles();
     const [progress, setProgress] = React.useState(props.pre);
 
-
     React.useEffect(() => {
         setProgress(props.curr);
-    }, []);
+    }, [props]);
 
     return (
         <div className={classes.root}>
-            <LinearProgressWithLabel barLabel={props.barLabel} color={props.color} value={progress} />
+            <ThemeProvider theme={theme}>
+                <LinearProgressWithLabel barLabel={props.barLabel} color={props.color} value={progress} />
+            </ThemeProvider>
         </div>
     );
 }
