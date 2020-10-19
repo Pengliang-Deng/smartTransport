@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
         // minHeight:'90vh',
         // paddingTop:'200px',
         backgroundImage: `url(${backgroundGif})`,
-        height: '100vh',
+        height: '900px',
         width: '100vw',
         backgroundRepeat:'no-repeat',
         backgroundSize: 'cover',
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         justifyContent:'center',
         alignItems:'center',
-        height: '100vh',
+        height: '900px',
         width: '100vw',
     },
     formLabel: {
@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'relative',
         left: '50%',
         transform: 'translateX(-50%)',
+        width: '20vw'
     },
     button2: {
         marginTop: '2px',
@@ -65,8 +66,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '40px',
         boxShadow: '2px 4px #B4A582',
         border: '2px solid #DAC9A6',
-    }
-
+    },
 }));
 
 export default function HomePage(props) {
@@ -92,7 +92,6 @@ export default function HomePage(props) {
         <div>
             <AvatarBar />
             {start? 
-
                 <div className={classes.root2}> 
                     <Tracker />
                     <Button onClick={toggle} className={classes.button2} size='large' variant="contained" color="secondary" >

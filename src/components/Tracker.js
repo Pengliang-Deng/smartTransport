@@ -20,7 +20,7 @@ import PixelTypography from './PixelTypography';
 Geocode.setApiKey("AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM")
 
 const styles = {
-    marginT: {marginTop: 1, marginBottom: 2},
+    marginT: {marginTop: 1, marginBottom: 4},
 }
 
 

@@ -117,6 +117,9 @@ const useStyles = makeStyles((theme) => ({
         boxShadow:'2px 2px #877F6C',
         borderRadius: '4px',
     },
+    box: {
+        minHeight: '800px'
+    }
 }));
 
 export default function Challenges(props) {
@@ -187,7 +190,7 @@ export default function Challenges(props) {
 
 
     return (
-        <div>
+        <div className={classes.box}>
             <AvatarBar />
             <div className={classes.root} >
                 <Paper className={classes.paper}>
