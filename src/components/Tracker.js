@@ -13,13 +13,14 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 // import TextField from '@material-ui/core/TextField';
 import AutoComplete from "react-google-autocomplete";
-import BtmNav from './BtmNav'
+import PixelTypography from './PixelTypography';
+
 
 
 Geocode.setApiKey("AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM")
 
 const styles = {
-    marginT: {marginTop: 2, marginBottom: 8}
+    marginT: {marginTop: 1, marginBottom: 2},
 }
 
 
@@ -189,7 +190,7 @@ export default class Tracker extends React.Component {
                 defaultZoom={15}
                 defaultCenter={{ lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng }}
             >
-                <AutoComplete
+                {/* <AutoComplete
                             style={{
                                 width: '96%',
                                 height: '40px',
@@ -199,7 +200,7 @@ export default class Tracker extends React.Component {
                             }}
                             onPlaceSelected={this.onPlaceSelected}
                             types={['(regions)']}
-                 />
+                 /> */}
                 <Marker
                     //google={this.props.google}
                     draggable={true}
@@ -219,25 +220,20 @@ export default class Tracker extends React.Component {
         <div style={{ padding: '1rem', margin: '0 auto', maxWidth: 700 }}>
             
             <Grid container direction="column" justify="center" alignItems="center">
-                <Grid item style={styles.marginT} >
-                    {/* <PixelTypography text='Smart Transport' variant='h4' /> */}
-                    <Typography variant='h4'>Smart Transport</Typography>
+                <Grid item style={styles.marginT}>
+                    <PixelTypography fontStyle="textS2" variant='h4' text="JOURNEY STARTS AT" />
                 </Grid>
                 <Grid item style={styles.marginT}>
-                    {/* <PixelTypography text={`City: `+ this.state.city} variant='h7' /> */}
-                    <Typography variant='h7'>{`City: `+ this.state.city}</Typography>
+                    <PixelTypography fontStyle="textS2" variant='h6' text={`City: `+ this.state.city} />
                 </Grid>
                 <Grid item style={styles.marginT} >
-                    {/* <PixelTypography text={`Area: `+ this.state.area} variant='h7' /> */}
-                    <Typography variant='h7'>{`Area: `+ this.state.area}</Typography>
+                    <PixelTypography fontStyle="textS2" variant='h6' text={`Area: `+ this.state.area} />
                 </Grid>
                 <Grid item style={styles.marginT} >
-                    {/* <PixelTypography text={`State: `+ this.state.state} variant='h7' /> */}
-                    <Typography variant='h7'>{`State: `+ this.state.state}</Typography>
+                    <PixelTypography fontStyle="textS2" variant='h6' text={`State: `+ this.state.state} />
                 </Grid>
                 <Grid item style={styles.marginT} >
-                    {/* <PixelTypography text={`Address: `+ this.state.address} variant ='h7' /> */}
-                    <Typography variant='h7'>{`Address: `+ this.state.address}</Typography>
+                    <PixelTypography fontStyle="textS2" variant='h6' text={`Address: `+ this.state.address} />
                 </Grid>
             </Grid>
 
@@ -254,17 +250,13 @@ export default class Tracker extends React.Component {
             </Input> */}
 
             <MapWithAMarker
-              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM&v=3.exp&libraries=geometry,drawing,places"
-              loadingElement={<div style={{ height: `100%` }} />}
-              containerElement={<div style={{ height: `400px` }} />}
-              mapElement={<div style={{ height: `100%` }} />}
+                googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM&v=3.exp&libraries=geometry,drawing,places"
+                loadingElement={<div style={{ height: `100%` }} />}
+                containerElement={<div style={{ height: `400px` }} />}
+                mapElement={<div style={{ height: `100%` }} />}
             />
-
-            <BtmNav current={0}/>
         </div>
         
     );
   }
 }
-
-

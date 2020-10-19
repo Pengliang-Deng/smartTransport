@@ -6,19 +6,34 @@ import Timer from '@material-ui/icons/Timer';
 import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import AppBar from '@material-ui/core/AppBar';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-
+import PixelTypography from './PixelTypography';
 
 
 const useStyles = makeStyles({
     container: {
         marginTop: 0,
+        backgroundColor: '#FFAB00'
     },
     appbar: {
         bottom: 0,
         top: 'auto',
         paddingTop: 16,
         paddingBottom: 16,
-        backgroundColor: 'white'
+        backgroundColor: '#FFAB00'
+    },
+    item: {
+        marginLeft: '10px',
+        marginRight: '10px',
+        backgroundColor:'#FCFAF2',
+        borderRadius:'13px',
+        boxShadow: '2px 4px #DAC9A6',
+    },
+    gardenButton: {
+        marginLeft: '10px',
+        marginRight: '10px',
+        backgroundColor:'#FCFAF2',
+        borderRadius:'50px',
+        boxShadow: '2px 4px #DAC9A6',
     }
 })
 
@@ -51,15 +66,21 @@ export default function BtmNav(props) {
                 className={styles.container}
             >
                 
-                <BottomNavigationAction onClick={trackNav} label="Tracker" icon={<Timer />} /> 
+                <BottomNavigationAction className={styles.item} onClick={trackNav} 
+                label={<PixelTypography fontStyle='textS2' variant='h7' text="Tracker" />}
+                icon={<Timer />} /> 
                     
             
-                <BottomNavigationAction onClick={gardenNav} label="Garden" icon={<House />} />
+                <BottomNavigationAction className={styles.gardenButton} onClick={gardenNav} 
+                label={<PixelTypography fontStyle='textS2' variant='h7' text="Garden" />} 
+                icon={<House />} />
         
 
-                <BottomNavigationAction onClick={challengesNav} label="Challenges" icon={<QuestionAnswer />} />
+                <BottomNavigationAction className={styles.item} onClick={challengesNav}
+                 label={<PixelTypography fontStyle='textS2' variant='h7' text="Challenges" />}
+                 icon={<QuestionAnswer />} />
 
             </BottomNavigation>
         </AppBar>
     )
-}
+} 

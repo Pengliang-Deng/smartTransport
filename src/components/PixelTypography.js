@@ -3,15 +3,20 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 const useStyle = makeStyles((theme) => ({
-    text: {
+    textS1: {
         fontFamily: '"Press Start 2P"'
+    },
+    textS2: {
+        fontFamily: "'VT323', monospace"
     }
 }))
 
 export default function PixelTypography(props) {
     const classes = useStyle();
     return (
-        <Typography className={classes.text} variant={props.variant}>{props.text}</Typography>
+        props.fontStyle === 'textS1'?
+        <Typography className={classes.textS1} variant={props.variant}>{props.text}</Typography> :
+        <Typography className={classes.textS2} variant={props.variant}>{props.text}</Typography>
     )
 }
 

@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
@@ -13,38 +13,37 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import {Link} from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
-
+import PixelTypography from './Components/PixelTypography';
 
 const useStyle = makeStyles((theme) => ({
     paperCard: {
         // marginTop: 80,
-        paddingTop: '10%',
-        paddingBottom: '10%',
-        paddingLeft: '6%',
-        paddingRight: '6%',
+        paddingTop: '8%',
+        paddingBottom: '8%',
+        paddingLeft: '3%',
+        paddingRight: '3%',
         background: 'rgba(255, 255, 255, 0.86)',
-        fontWeight: 'bold',
-        fontSize: '1.2rem',
+        // fontWeight: 'bold',
+        // fontSize: '1.2rem',
         overflowWrap: 'break-word',
         wordWrap: 'break-word',
         hyphens: 'auto',
-        borderRadius: '8%',
+        borderRadius: '18px',
     },
     bgImg: {
         backgroundImage: `url(${backgroundImg})`,
         backgroundRepeat:'no-repeat',
         backgroundSize: 'cover',
-        marginTop: 90,
+        marginTop: 4,
         // backgroundColor: 'green',
-  
     },
     container: {
-        paddingTop: 80,
-        paddingBottom: 80,
+        paddingTop: 20,
+        paddingBottom: 20,
     },
     textCenter: {
-        marginTop:40,
-        marginBottom:30,
+        marginTop:6,
+        marginBottom:6,
         textAlign:"center",
         // borderColor: 'black',
     },
@@ -96,7 +95,7 @@ export default function Quiz() {
         console.log(event.target.innerText)
         const answerChosen = event.target.innerText[0].toLowerCase();
         setUserAnswer(answerChosen);
-        if (answerChosen == question.answer) {
+        if (answerChosen === question.answer) {
             console.log('true');
             setCorrectness(true);
             // Open modal
@@ -123,7 +122,7 @@ export default function Quiz() {
 
     return (
         <div>
-            <AppBar>
+            {/* <AppBar>
                 <Toolbar variant='dense'>
                     <IconButton edge="start" className={classes.arrowButton} color="inherit">
                         <Link className={classes.link} to='/challenges'>
@@ -132,24 +131,32 @@ export default function Quiz() {
                     </IconButton>
                     <Typography variant='h6' color='inherit'> Quiz</Typography>
                 </Toolbar>
-            </AppBar>
+            </AppBar> */}
             <div className={classes.bgImg} >
                 <Container className={classes.container} maxWidth='xs'> 
-                    <Paper className={classes.paperCard}>{question.question}</Paper>
+                    <Paper className={classes.paperCard}>{<PixelTypography className={classes.title} fontStyle='textS2' variant='h5' text={question.question} />}</Paper>
                 </Container>
             </div>
             <List component="nav">
                 <ListItem onClick={checkAnswer} button>
-                    <ListItemText className={`${(userAnswer == 'a' && correctness)? classes.correct : classes.textCenter}`} primary={`A. ${question.a}`} />
+                    <ListItemText className={`${(userAnswer === 'a' && correctness)? classes.correct : classes.textCenter}`} primary=
+                    {<PixelTypography className={classes.title} fontStyle='textS2' variant='h6' text={`A. ${question.a}`} />}
+                     />
                 </ListItem>
                 <ListItem onClick={checkAnswer} button>
-                    <ListItemText className={`${(userAnswer == 'b' && correctness)? classes.correct : classes.textCenter}`} primary={`B. ${question.b}`} />
+                    <ListItemText className={`${(userAnswer === 'b' && correctness)? classes.correct : classes.textCenter}`} primary=
+                    {<PixelTypography className={classes.title} fontStyle='textS2' variant='h6' text={`B. ${question.b}`} />}
+                     />
                 </ListItem>
                 <ListItem onClick={checkAnswer} button>
-                    <ListItemText className={`${(userAnswer == 'c' && correctness)? classes.correct : classes.textCenter}`} primary={`C. ${question.c}`} />
+                    <ListItemText className={`${(userAnswer === 'c' && correctness)? classes.correct : classes.textCenter}`} primary=
+                    {<PixelTypography className={classes.title} fontStyle='textS2' variant='h6' text={`C. ${question.c}`} />}
+                     />
                 </ListItem>
                 <ListItem onClick={checkAnswer} button>
-                    <ListItemText className={`${(userAnswer == 'd' && correctness)? classes.correct : classes.textCenter}`} primary={`D. ${question.d}`} />
+                    <ListItemText className={`${(userAnswer === 'd' && correctness)? classes.correct : classes.textCenter}`} primary=
+                    {<PixelTypography className={classes.title} fontStyle='textS2' variant='h6' text={`D. ${question.d}`} />}
+                    />
                 </ListItem>
             </List>
             <Modal

@@ -109,9 +109,9 @@ export default class Launch extends Component {
                 <Grid container direction="column" justify="center">
                     <Grid item>
                         <img style={styles.img} alt="pixel_car" src="car500.png" />
-                        <PixelTypography text="Smart Transport" variant="h4" />
+                        <PixelTypography fontStyle='textS1' text="Smart Transport" variant="h4" />
                         <br />
-                        <PixelTypography variant='h6' text={this.state.hasAccount? "Sign In" : "Sign Up"} />
+                        <PixelTypography fontStyle='textS1' variant='h6' text={this.state.hasAccount? "Sign In" : "Sign Up"} />
                     </Grid>
 
                     <TextField 
