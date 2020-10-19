@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import {Link} from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
-import PixelTypography from './Components/PixelTypography';
+import PixelTypography from './components/PixelTypography';
 
 const useStyle = makeStyles((theme) => ({
     paperCard: {

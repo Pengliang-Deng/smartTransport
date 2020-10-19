@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 // import MyCircularProgress from './Components/MyCircularProgress';
 // import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import BtmNav from "./Components/BtmNav";
+import BtmNav from "./components/BtmNav";
 // import LinearProgress from '@material-ui/core/LinearProgress';
 // import Fab from '@material-ui/core/Fab';
 // import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
-import AvatarBar from './Components/AvatarBar';
-import TaskBox from './Components/TaskBox';
+import AvatarBar from './components/AvatarBar';
+import TaskBox from './components/TaskBox';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -16,7 +16,7 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 // import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
-import PixelTypography from './Components/PixelTypography';
+import PixelTypography from './components/PixelTypography';
 import Quiz from './Quiz'
 
 import transitImg from './imgs/bus.png';

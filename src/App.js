@@ -2,8 +2,8 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import Launch from './Components/Launch';
-import HomePage from './Components/HomePage';
+import Launch from './components/Launch';
+import HomePage from './components/HomePage';
 import Game from './Game';
 import Challenges from './Challenges';
 import Quiz from './Quiz';

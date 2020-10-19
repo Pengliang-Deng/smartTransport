@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import MyCircularProgress from './Components/MyCircularProgress';
+import MyCircularProgress from './components/MyCircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import BtmNav from "./Components/BtmNav";
+import BtmNav from "./components/BtmNav";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Fab from '@material-ui/core/Fab';
 import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
-import AvatarBar from './Components/AvatarBar'
+import AvatarBar from './components/AvatarBar'
 
 
 const styles = ({

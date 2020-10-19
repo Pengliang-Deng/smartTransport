@@ -4,11 +4,11 @@ import React from 'react';
 // Material-UI
 import Box from '@material-ui/core/Box';
 // Components
-import TopBar from "./Components/garden_ui/topBar";
-import GardenToolsBar from "./Components/garden_ui/gardenToolsBar";
-import GardenField from "./Components/garden_ui/gardenField";
+import TopBar from "./components/garden_ui/topBar";
+import GardenToolsBar from "./components/garden_ui/gardenToolsBar";
+import GardenField from "./components/garden_ui/gardenField";
 
-import bgImg from './Components/garden_ui/sky.png';
+import bgImg from './components/garden_ui/sky.png';
 
 
 export default class Garden extends React.Component {
