@@ -10,8 +10,10 @@ import GardenField from "./components/garden_ui/gardenField";
 
 import bgImg from './components/garden_ui/sky.png';
 import PlantDrawer from "./components/garden_ui/plantDrawer";
+import axios from "axios";
+import setAuthToken from "./util/AuthToken";
 
-
+const backEndURL = 'http://192.168.3.4:5000/';
 export default class Garden extends React.Component {
     constructor(props) {
         super(props);
@@ -24,7 +26,15 @@ export default class Garden extends React.Component {
          *  itemsInfo: {coins: number, resources: {water:number, fertilizer: number, sunny: number},seeds: []}
          * }}
          */
-        const gameInfo = props.gameInfo;
+        let gameInfo = props.gameInfo;
+        setAuthToken(localStorage.getItem('jwt-token'));
+        const data = localStorage.getItem('jwt-token')._id;
+        axios.post(backEndURL + 'gameData/get/', data)
+            .then((res) => {
+                gameInfo = res.data;
+            })
+
+
         if (gameInfo.fieldInfo.grids.length < gameInfo.fieldInfo.size) {
             let grids = gameInfo.fieldInfo.grids;
             const size = grids.length;

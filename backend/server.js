@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const expressJwt = require('express-jwt');
 
 // NO IDEAS WHY THIS
 require('dotenv').config();
@@ -21,10 +22,21 @@ app.use(cors());
 // enable json format 
 app.use(express.json());
 
+// Json web token
+app.use(expressJwt({
+    algorithms: ['HS256'],
+    secret: 'SmartTransport123'  // signed secret key
+}).unless({
+    path: ['/', '/add']  // path accessed without token
+}))
+
 const userRouter = require('./routes/users');
 
 app.use('/', userRouter);
 // app.use('/register', userRouter);
+
+const gameDataRouter = require('./routes/gameData')
+app.use('/gameData/', gameDataRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

@@ -1,5 +1,8 @@
+const initGameData = require('./game_utils/initGameData');
+
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken') // jwt
 let User = require('../models/user.model')
 
 
@@ -18,7 +21,21 @@ router.route('/').post(async(req, res) => {
         return res.status(422).json("Wrong Password")
     }
 
-    return res.json(user)
+    // generate token
+    const token = 'Bearer ' + jwt.sign(
+        {
+            _id: user._id,
+        },
+        'SmartTransport123',
+        {
+            expiresIn: 3600 * 24 * 3,
+        }
+    )
+
+    return res.json({
+        status: 'ok',
+        data: { token: token }
+    })
 });
 
 

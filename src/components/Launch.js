@@ -8,7 +8,9 @@ import { Link as MuiLink } from '@material-ui/core'
 import axios from 'axios'
 
 import PixelTypography from './PixelTypography'
+import setAuthToken from "../util/AuthToken";
 
+const backEndURL = 'http://192.168.3.4:5000/';
 
 const styles = {
     container: {
@@ -75,11 +77,13 @@ export default class Launch extends Component {
         // console.log(userInfo)
         
 
-        axios.post('http://localhost:5000/', userInfo)
+        axios.post(backEndURL, userInfo)
         .then((res) => {
             const user = res.data
             // console.log(typeof(user))
             if (user) {
+                localStorage.setItem('jwt-token', user.data.token); // store token
+                setAuthToken(user.token);
                 window.location = '/homepage'
             }
         })
@@ -92,7 +96,7 @@ export default class Launch extends Component {
             password: this.state.password
         }
 
-        axios.post('http://localhost:5000/add', userInfo)
+        axios.post(backEndURL + 'add', userInfo)
         .then((res) => {console.log(res.data)})
 
     }

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const gameDataSchema = new mongoose.Schema({
+    uid: String,
     fieldInfo: {
         size: {
             type: Number,
@@ -34,12 +35,17 @@ const gameDataSchema = new mongoose.Schema({
             fertilizer: Number,
             sunny: Number,
         },
-        seeds: [
-            {
-                name: String,
-                amount: Number,
-            }
-        ]
+        seeds: {
+
+        },
+        styles: {
+            tileBackground: [
+                {type: String}
+            ],
+            fence: [
+                {type: String}
+            ]
+        }
     }
 
 })
