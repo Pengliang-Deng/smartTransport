@@ -1,4 +1,3 @@
-const initGameData = require('./game_utils/initGameData');
 
 const router = require('express').Router();
 const bcrypt = require('bcrypt');

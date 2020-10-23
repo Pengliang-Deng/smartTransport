@@ -8,7 +8,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import PixelAppBar from "../containers/PixelAppBar";
 import { Link }from 'react-router-dom';
 
-const userStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
 
     topBar: {
         top: '4px',
@@ -26,16 +26,16 @@ const userStyles = makeStyles((theme) => ({
     },
     title: {
         // flexGrow: 1,
-        fontFamily: '"Press Start 2P"',
+        fontFamily: "'VT323', monospace",
         // fontStyle: 'cursive',
         color: 'black',
-        fontSize: '0.8em',
+        fontSize: '1.5em',
     },
 }));
 
 
 export default function TopBar(props) {
-    const classes = userStyles();
+    const classes = useStyles();
     return(
 
         <PixelAppBar position="fixed" className={classes.topBar}>

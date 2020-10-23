@@ -1,33 +1,55 @@
 const initGameData = require('./game_utils/initGameData');
 
 const router = require('express').Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken') // jwt
 let gameData = require('../models/gameData.model')
 let User = require('../models/user.model')
 
 
-router.route('/get').post(async(req, res) => {
+router.route('/get').get(async(req, res) => {
     const user = await User.findOne({
         _id: req.user._id
     })
-
     if(!user) {
-        return res.status(422).json("User Not Found")
+        return res.status(422).json("User Not Found");
     }
 
     const data = await gameData.findOne({
         uid: req.user._id
     })
     if (data) {
-        return res.json(data)
+        return res.json(data);
     }
     else {
         const newGameData = initGameData(user.username, user._id);
         newGameData.save();
         return res.json(newGameData);
     }
+});
 
+
+router.route('/save').post(async(req, res) => {
+    const newData = req.body;
+    console.log(req.body)
+    if (!newData.fieldInfo || !newData.playerInfo || !newData.itemsInfo) {
+        return res.status(500).json("Invalid Data");
+    }
+
+    const user = await User.findOne({
+        _id: req.user._id
+    })
+    if(!user) {
+        return res.status(422).json("User Not Found");
+    }
+
+    const updates = {
+        fieldInfo: newData.fieldInfo,
+        playerInfo: newData.playerInfo,
+        itemsInfo: newData.itemsInfo
+    }
+
+    gameData.findOneAndUpdate({uid: user._id}, {$set: updates})
+        .catch(error => {return res.status(500).json(error)});
+    return res.json("game data updated");
 });
 
 

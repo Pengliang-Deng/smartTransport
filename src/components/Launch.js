@@ -6,9 +6,9 @@ import Grid from '@material-ui/core/Grid';
 // import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@material-ui/core'
 import axios from 'axios'
+import http from '../util/axios_packaged'
 
 import PixelTypography from './PixelTypography'
-import setAuthToken from "../util/AuthToken";
 
 const backEndURL = 'http://192.168.3.4:5000/';
 
@@ -77,13 +77,12 @@ export default class Launch extends Component {
         // console.log(userInfo)
         
 
-        axios.post(backEndURL, userInfo)
+        http.post('/', userInfo)
         .then((res) => {
             const user = res.data
             // console.log(typeof(user))
             if (user) {
                 localStorage.setItem('jwt-token', user.data.token); // store token
-                setAuthToken(user.token);
                 window.location = '/homepage'
             }
         })
@@ -96,7 +95,7 @@ export default class Launch extends Component {
             password: this.state.password
         }
 
-        axios.post(backEndURL + 'add', userInfo)
+        http.post('/add', userInfo)
         .then((res) => {console.log(res.data)})
 
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
-import Garden from './gardenUI';
+import Garden from './components/gardenUI';
 import {gameInfo1} from './testData';
 import Store from './components/garden_ui/store_and_collections/store';
 

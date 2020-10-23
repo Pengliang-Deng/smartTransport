@@ -63,8 +63,8 @@ const useStyles = makeStyles({
 const themeText = createMuiTheme({
     typography: {
         body1: {
-            fontFamily: '"Press Start 2P"',
-            fontSize: '14px',
+            fontFamily: "'VT323', monospace",
+            fontSize: '1.5em',
         },
     },
 });

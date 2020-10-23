@@ -46,6 +46,9 @@ const initialGameInfo = {
             ],
             fence: [
                 'normal',
+            ],
+            sceneBackground: [
+                {type: String}
             ]
         }
     }

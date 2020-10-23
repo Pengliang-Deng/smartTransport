@@ -114,8 +114,8 @@ export default function GardenField(props){
         field: {
             flexGrow: 1,
             // marginTop: theme.spacing(1),
-            paddingTop: theme.spacing(4),
-            paddingBottom: theme.spacing(19),
+            paddingTop: theme.spacing(10),
+            paddingBottom: theme.spacing(21),
             backgroundImage: 'url(' + tileBackground + ')',
             backgroundRepeat: 'repeat',
         },
@@ -141,9 +141,9 @@ export default function GardenField(props){
     React.useEffect(() => {
         if (!props.fieldInfo.sunClickCount) return ;
         setAni(true); // set water animation
-        const timer = setTimeout(() => {setAni(false)}, 1500); // reset(close) animation
+        const timer0 = setTimeout(() => {setAni(false)}, 1500); // reset(close) animation
 
-        return () => clearTimeout(timer);
+        return () => clearTimeout(timer0);
     }, [props.fieldInfo.sunClickCount]);
 
     const classes = useStyles();
@@ -151,7 +151,7 @@ export default function GardenField(props){
         return(
             <Grid container justify="center" className={classes.field} position="relative" spacing={0}>
                 <Box className={classes.fence} position="absolute"/>
-                <Grid item xs={10}>
+                <Grid item xs={10} >
                     <Grid container justify="center" spacing={4}>
                         {arr.map((value) => (
                             <GardenFieldGrid
@@ -207,8 +207,8 @@ function GardenFieldGrid(props) {
             setStatus('revived'); // show reviving animation when flower is watered
         }
         // reset transition image
-        const timer = setTimeout( () => {setStatus(gridInfo.status)}, 2000);
-        return () => clearTimeout(timer);
+        const timer1 = setTimeout( () => {setStatus(gridInfo.status)}, 2000);
+        return () => clearTimeout(timer1);
     }, [props.gridInfo.growthValue, props.gridInfo.waterValue]);
 
     /* handle status bar show */
@@ -217,8 +217,8 @@ function GardenFieldGrid(props) {
         // show status bar when status changes
         setStatusBar(true);
         // reset(hide) status bar
-        const timer = setTimeout(() => {setStatusBar(false)}, 2000);
-        return () => clearTimeout(timer);
+        const timer2 = setTimeout(() => {setStatusBar(false)}, 2000);
+        return () => clearTimeout(timer2);
     }, [props.gridInfo.clickCount, props.gridInfo.growthValue, props.gridInfo.waterValue]);
 
     /* handle water/fertilizer animation */
@@ -227,15 +227,15 @@ function GardenFieldGrid(props) {
     React.useEffect(() => {
         if (!props.gridInfo.waterClickCount) return ;
         setAni('water'); // set water animation
-        const timer = setTimeout(() => {setAni('none')}, 1000); // reset(close) animation
-        return () => clearTimeout(timer);
+        const timer3 = setTimeout(() => {setAni('none')}, 1000); // reset(close) animation
+        return () => clearTimeout(timer3);
     }, [props.gridInfo.waterClickCount]);
     // fertilizer ani
     React.useEffect(() => {
         if (!props.gridInfo.ferClickCount) return ;
         setAni('fertilizer'); // set water animation
-        const timer = setTimeout(() => {setAni('none')}, 1000); // reset(close) animation
-        return () => clearTimeout(timer);
+        const timer4 = setTimeout(() => {setAni('none')}, 1000); // reset(close) animation
+        return () => clearTimeout(timer4);
     }, [props.gridInfo.ferClickCount]);
 
     let flowerImageSrc = '';
