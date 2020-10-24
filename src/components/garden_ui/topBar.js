@@ -19,17 +19,20 @@ const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginLeft: theme.spacing(2),
         color: 'black',
+        position: 'absolute',
+        right:'3%',
     },
     exitButton: {
         marginRight: theme.spacing(2),
-        color: 'black'
+        color: 'black',
     },
     title: {
         // flexGrow: 1,
-        fontFamily: "'VT323', monospace",
+        // fontFamily: "'VT323', monospace",
+        fontFamily: '"Press Start 2P"',
         // fontStyle: 'cursive',
         color: 'black',
-        fontSize: '1.5em',
+        fontSize: '0.8em',
     },
 }));
 
@@ -39,16 +42,18 @@ export default function TopBar(props) {
     return(
 
         <PixelAppBar position="fixed" className={classes.topBar}>
-            <Toolbar>
+            <Toolbar position="relative">
                 <Link to='/homepage'>
                     <IconButton edge="start" className={classes.exitButton} color={"inherit"}>
                         <ArrowBackIcon />
                     </IconButton>
                 </Link>
                 <h1 className={classes.title}>{props.title}</h1>
-                <IconButton edge="end" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <MenuIcon />
-                </IconButton>
+                <Link to={'/store'} className={classes.menuButton}>
+                    <IconButton edge="end" color="inherit" aria-label="menu">
+                        <MenuIcon />
+                    </IconButton>
+                </Link>
             </Toolbar>
         </PixelAppBar>
 

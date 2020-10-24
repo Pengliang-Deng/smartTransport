@@ -251,8 +251,8 @@ function GardenFieldGrid(props) {
         return (
             <ProgressBarSet className={classes.progressBarSet}
                                 style={{position:'absolute', bottom: '5%', left: '5%'}}
-                                growthValues={[props.gridInfo.preGrowthValue, props.gridInfo.growthValue]}
-                            waterValues={[props.gridInfo.preWaterValue, props.gridInfo.waterValue]}>
+                                growth_values={[props.gridInfo.preGrowthValue, props.gridInfo.growthValue]}
+                            water_values={[props.gridInfo.preWaterValue, props.gridInfo.waterValue]}>
             </ProgressBarSet>
         );
     }

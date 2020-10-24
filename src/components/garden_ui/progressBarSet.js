@@ -23,7 +23,7 @@ function LinearProgressWithLabel(props) {
     return (
         <Box display="flex" alignItems="center">
             {/*<Box minWidth={45}>*/}
-            {/*    <Typography variant="body2" color="textSecondary">{props.barLabel}</Typography>*/}
+            {/*    <Typography variant="body2" color="textSecondary">{props.barlabel}</Typography>*/}
             {/*</Box>*/}
             <Box width="100%" mr={1}>
                 <LinearProgress className={classes.lp} variant="determinate" {...props} />
@@ -56,7 +56,7 @@ export function LinearWithValueLabel(props) {
     });
 
     const classes = useStyles();
-    const [progress, setProgress] = React.useState(props.pre);
+    const [progress, setProgress] = React.useState(props.pre?props.pre:0);
 
     React.useEffect(() => {
         setProgress(props.curr);
@@ -65,7 +65,7 @@ export function LinearWithValueLabel(props) {
     return (
         <div className={classes.root}>
             <ThemeProvider theme={theme}>
-                <LinearProgressWithLabel barLabel={props.barLabel} color={props.color} value={progress} />
+                <LinearProgressWithLabel barlabel={props.barlabel} color={props.color} value={progress} />
             </ThemeProvider>
         </div>
     );
@@ -73,18 +73,18 @@ export function LinearWithValueLabel(props) {
 
 export default function ProgressBarSet(props) {
     /**@type {[number, number]}*/
-    const growthValues = props.growthValues;
+    const growth_values = props.growth_values;
     /**@type {[number, number]}*/
-    const waterValues = props.waterValues;
+    const water_values = props.water_values;
 
     return (
-        <Fade in={true}>
+        // <Fade in={true}>
             <Box {...props}>
                 <LinearWithValueLabel  barlabel={"growth"} color={"secondary"}
-                                      pre={growthValues[0]} curr={growthValues[1]}/>
+                                      pre={growth_values[0]} curr={growth_values[1]}/>
                 <LinearWithValueLabel barlabel={"water"} color={"primary"}
-                                      pre={waterValues[0]} curr={waterValues[1]}/>
+                                      pre={water_values[0]} curr={water_values[1]}/>
             </Box>
-        </Fade>
+        // </Fade>
     );
 }

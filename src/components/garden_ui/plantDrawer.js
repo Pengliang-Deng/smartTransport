@@ -103,7 +103,7 @@ export default function PlantDrawer(props) {
             <ThemeProvider theme={themeText}>
                 <List className={classes.list}>
                     {SEEDS.map((seed_key) => (
-                        <ThemeProvider theme={themeText}>
+                        <ThemeProvider key={seed_key} theme={themeText}>
                         <ListItem button key={seed_key} onClick={() => {props.plantAction(seed_key)}}>
                             <Box className={classes.imageContainer} style={{width: '100px', height: '100px'}}>
                                 <img alt={seed_key + " seeds"} src={seedListItemsInfo[seed_key].image}/>
@@ -112,7 +112,7 @@ export default function PlantDrawer(props) {
                                 <ListItemText className={classes.listItemText}
                                           primary={seedListItemsInfo[seed_key].name}
                                           secondary={
-                                              <Typography variant="span" style={{color: "#424242", maxWidth: '50%', fontSize: '12px'}}>
+                                              <Typography variant="body1" style={{color: "#424242", maxWidth: '90%', fontSize: '15px'}}>
                                                   {seedListItemsInfo[seed_key].description}
                                               </Typography>
                                           }
@@ -136,7 +136,6 @@ export default function PlantDrawer(props) {
             anchor={anchor}
             open={state[anchor]}
             onClose={toggleDrawer(anchor, false)}
-            onOpen={toggleDrawer(anchor, true)}
         >
             {list(anchor)}
         </Drawer>

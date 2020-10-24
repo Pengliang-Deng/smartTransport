@@ -1,66 +1,142 @@
 import React, { Component } from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import StoreBar from "./storeAppBar";
+import StoreList from "./storeList";
+import StoreBtmNav from "./StoreBtmNav";
+import GardenLoading from "../loading";
+import http from "../../../util/axios_packaged";
 
 export default class Store extends Component {
     constructor(props) {
         super(props);
-        let itemsInfo = props.gameInfo.itemsInfo;
-
         this.state = {
-            ownedItems: {
-                coins: itemsInfo.coins,
-                resources: {
-                    water: itemsInfo.resources.water,
-                    fertilizer: itemsInfo.resources.fertilizer,
-                    sunny: itemsInfo.resources.sunny,
-                },
-                seeds: itemsInfo.resources.seeds,
-                styles: {
-                    tileBackground: itemsInfo.styles.tileBackground,
-                    fence: itemsInfo.styles.fence,
-                }
-            }
+            loaded: false,
+            currentList: 0,
         }
     }
 
+    componentDidMount() {
+        this.pullData();
+    }
+
     render() {
+        if (this.state.loaded === false) {
+            return (<GardenLoading/>);
+        }
+
         return(
-            this.topbar()
+            <div>
+                <StoreBar title="Garden Shop" coins={this.state.itemsInfo.coins}/>
+                <StoreList itemsInfo={this.state.itemsInfo} fieldSize={this.state.fieldInfo.size}
+                           buySeed={(seed, price, available) => this.buySeed(seed, price, available)}
+                           buyGrids={(price, available, quantity) => {this.buyGrids(price, available, quantity)}}
+                           buyResource={(name, price, available, quantity, resource) => this.buyResource(name, price, available, quantity, resource)}
+                />
+                <StoreBtmNav currentList={this.state.currentList} changeList={(i) => this.changeList(i)}/>
+            </div>
         );
     }
 
-    topbar() {
-        const useStyles = makeStyles((theme) => ({
-            root: {
-                flexGrow: 1,
-            },
-            menuButton: {
-                marginRight: theme.spacing(2),
-            },
-            title: {
-                flexGrow: 1,
-            },
-        }));
-        const classes = useStyles();
-
-        return(
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <CloseIcon />
-                    </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        Garden Store
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-        );
+    changeList(index) {
+        this.setState({currentList: index});
     }
+
+    buySeed(seed, price, available) {
+        if (! available) {alert("This seed is not for sale!"); return ;}
+        let itemsInfo = this.state.itemsInfo;
+        if (itemsInfo.coins < price) {alert("Not enough Coins"); return ;}
+
+        if (window.confirm("Spend " + price + " coins for a " + seed + " seed?")) {
+            itemsInfo.coins -= price;
+            itemsInfo.seeds[seed] = itemsInfo.seeds[seed]? itemsInfo.seeds[seed]+1: 1;
+        }
+        this.setState({itemsInfo: itemsInfo});
+        this.postData(this.state);
+    }
+
+    buyResource(name, price, available, quantity, resource) {
+        if (! available) {alert("This resource is not available now!"); return ;}
+        let itemsInfo = this.state.itemsInfo;
+        if (itemsInfo.coins < price) {alert("Not enough Coins"); return ;}
+        if (window.confirm("Spend " + price + " coins for a " + name + " ?")) {
+            itemsInfo.coins -= price;
+            itemsInfo.resources[resource] = itemsInfo.resources[resource]? itemsInfo.resources[resource] + quantity: quantity;
+        }
+        this.setState({itemsInfo: itemsInfo});
+        this.postData(this.state);
+    }
+
+    buyGrids(price, available, quantity) {
+        if (! available) {alert("It is not available now!"); return ;}
+        let itemsInfo = this.state.itemsInfo;
+        let fieldInfo = this.state.fieldInfo;
+        if (itemsInfo.coins < price) {alert("Not enough Coins"); return ;}
+        if (window.confirm("Spend " + price + " coins for " + quantity + " grids?")) {
+            itemsInfo.coins -= price;
+            fieldInfo.size += quantity;
+        }
+        this.setState({itemsInfo: itemsInfo, fieldInfo: fieldInfo});
+        this.postData(this.state);
+    }
+
+    postData(data) {
+        http.post('/gameData/save', data).then(response => {console.log(response);})
+            .catch(res => {
+                if (res.response.status === 422) {window.location = '/'; alert("user not found")}
+                if (res.response.status === 500) {window.location = '/garden'; alert(res.response.data)}
+                console.log(res);
+            })
+    }
+
+    async pullData() {
+        /**
+         * @type {{
+         *  selected: number,
+         *  fieldInfo: {size:number, tileBackground: string, fenceImage: string,
+         *       gridBackground: string, gridOutline: string, grids: [], },
+         *  playerInfo: {playerName: string},
+         *  itemsInfo: {coins: number, resources: {water:number, fertilizer: number, sunny: number},seeds: {}}
+         * }}
+         */
+        let gameInfo;
+        await http.get('/gameData/get')
+            .then((res) => {
+                gameInfo = res.data;
+            })
+            .catch((reason) => {
+                window.location = '/';
+            })
+
+        const state = {
+            loaded: true, // game data loaded
+            fieldInfo: {
+                // number of grids in the field
+                size: gameInfo.fieldInfo.size,
+                // styles of the garden
+                tileBackground: gameInfo.fieldInfo.tileBackground,
+                fenceImage: gameInfo.fieldInfo.fenceImage,
+                gridBackground: gameInfo.fieldInfo.gridBackground,
+                gridOutline: gameInfo.fieldInfo.gridOutline,
+
+                // information of all grids
+                grids: gameInfo.fieldInfo.grids,
+
+            },
+            playerInfo: gameInfo.playerInfo,
+            itemsInfo: {
+                coins: gameInfo.itemsInfo.coins,
+                resources: {
+                    /* number of resources */
+                    water: gameInfo.itemsInfo.resources.water,
+                    fertilizer: gameInfo.itemsInfo.resources.fertilizer,
+                    sunny: gameInfo.itemsInfo.resources.sunny,
+                },
+                seeds: gameInfo.itemsInfo.seeds,
+                styles: gameInfo.itemsInfo.styles,
+            },
+        }
+
+        this.setState(state);
+    }
+
 }

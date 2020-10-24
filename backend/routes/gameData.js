@@ -41,10 +41,17 @@ router.route('/save').post(async(req, res) => {
         return res.status(422).json("User Not Found");
     }
 
+    const currentData = await gameData.findOne({
+        uid: user._id
+    })
+    if(!currentData) {
+        return res.status(500).json("data lost");
+    }
+
     const updates = {
-        fieldInfo: newData.fieldInfo,
-        playerInfo: newData.playerInfo,
-        itemsInfo: newData.itemsInfo
+        fieldInfo: newData.fieldInfo ? newData.fieldInfo: currentData.fieldInfo,
+        playerInfo: newData.playerInfo ? newData.playerInfo: currentData.playerInfo,
+        itemsInfo: newData.itemsInfo ? newData.itemsInfo: currentData.itemsInfo,
     }
 
     gameData.findOneAndUpdate({uid: user._id}, {$set: updates})

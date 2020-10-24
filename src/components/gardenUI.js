@@ -33,7 +33,7 @@ export default class Garden extends React.Component {
         }
 
         return(
-            <Box style={{left: 0, background: '#42A5F5'}} container className="app" xs={12}>
+            <Box style={{left: 0, background: '#42A5F5'}} className="app" xs={12}>
                 {/*Theme background*/}
                 <Box style={
                     {width: '100%',
@@ -41,7 +41,7 @@ export default class Garden extends React.Component {
                         backgroundImage: 'url(' + bgImg +')',
                         backgroundPosition: 'center',
                         backgroundSize: 'contain',
-                }} container>
+                }} >
                 </Box>
                 {/*Title bar on the top*/}
                 <TopBar title={this.state.playerInfo.playerName + "'s Garden"}/>
@@ -73,7 +73,7 @@ export default class Garden extends React.Component {
             stateTemp.selected = null;
         }
         this.setState(stateTemp);
-        this.postData(stateTemp);
+        // this.postData(stateTemp);
     }
 
     handleFieldClick(i, gridOption=null) {
@@ -146,6 +146,7 @@ export default class Garden extends React.Component {
                 if (stateTemp.fieldInfo.grids[j].flower === "none") continue;
                 stateTemp.fieldInfo.grids[j].growthValue = Math.min(100, stateTemp.fieldInfo.grids[j].growthValue + SUN_INCREMENT);
                 stateTemp.fieldInfo.grids[j].waterValue = Math.min(100, stateTemp.fieldInfo.grids[j].waterValue + SUN_WATER_INCREAMENT);
+                stateTemp.itemsInfo.resources.sun = Math.max(0, this.state.itemsInfo.resources.sun - 1);
             }
         }
 
@@ -225,10 +226,10 @@ export default class Garden extends React.Component {
 
     postData(data) {
         http.post('/gameData/save', data).then(response => {console.log(response);})
-            .catch(response => {
-                if (response.status === 422) {window.location = '/';}
-                if (response.status === 500) {window.location.reload();}
-                console.log(response);
+            .catch(res => {
+                if (res.response.status === 422) {window.location = '/'; alert("user not found")}
+                if (res.response.status === 500) {window.location.reload(); alert(res.response.data)}
+                console.log(res);
             })
     }
 
@@ -300,9 +301,9 @@ export default class Garden extends React.Component {
                     fertilizer: gameInfo.itemsInfo.resources.fertilizer,
                     sunny: gameInfo.itemsInfo.resources.sunny,
                 },
-                seeds: gameInfo.itemsInfo.seeds
+                seeds: gameInfo.itemsInfo.seeds,
+                styles: gameInfo.itemsInfo.styles,
             },
-            styles: gameInfo.itemsInfo.styles,
         }
 
         this.setState(state);

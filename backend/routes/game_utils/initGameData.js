@@ -48,7 +48,6 @@ const initialGameInfo = {
                 'normal',
             ],
             sceneBackground: [
-                {type: String}
             ]
         }
     }
