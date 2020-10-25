@@ -26,7 +26,7 @@ router.route('/get').get(async(req, res) => {
         data = newGameData;
     }
 
-    dailyWater(data, user);
+    dailySunnyWater(data, user);
 
     return res.json(data);
 });
@@ -66,12 +66,13 @@ router.route('/save').post(async(req, res) => {
     return res.json("game data updated");
 });
 
-async function dailyWater(data, user) {
+async function dailySunnyWater(data, user) {
     if (!data.lastLoginDate || data.lastLoginDate !== new Date().getUTCDate().toString()) {
         gameData.findOneAndUpdate({uid: user._id},
             {$set: {lastLoginDate: new Date().getUTCDate()}})
             .catch(error => {console.error(error)});
         changeGameDataFuncs.increaseWater(user._id, 5);
+        changeGameDataFuncs.increaseSun(user._id, 5);
     }
 }
 

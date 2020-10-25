@@ -49,6 +49,9 @@ const gameDataSchema = new mongoose.Schema({
             ],
             fence: [
                 {type: String}
+            ],
+            sceneBackground: [
+                {type: String}
             ]
         }
     }
