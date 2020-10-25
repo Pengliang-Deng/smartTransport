@@ -33,6 +33,7 @@ const theme = createMuiTheme({
     },
 });
 
+/* the tool bar on the bottom of garden UI */
 export default function GardenToolsBar(props) {
     const classes = useStyles();
     return(

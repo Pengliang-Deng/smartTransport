@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
+/* App Bar on the top of garden UI*/
 export default function TopBar(props) {
     const classes = useStyles();
     return(

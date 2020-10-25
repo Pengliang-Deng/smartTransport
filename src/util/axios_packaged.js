@@ -5,7 +5,7 @@ const SERVER_HOST = window.location.hostname;
 const SERVER_PORT = 5000;
 const service = axios.create({
     baseURL: 'http://' + SERVER_HOST + ':' + SERVER_PORT,
-    timeout: 5000,
+    timeout: 10000,
 })
 service.defaults.headers.common['Authorization'] = localStorage.getItem('jwt-token');
 

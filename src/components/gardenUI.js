@@ -7,14 +7,22 @@ import Box from '@material-ui/core/Box';
 import TopBar from "./garden_ui/topBar";
 import GardenToolsBar from "./garden_ui/gardenToolsBar";
 import GardenField from "./garden_ui/gardenField";
-
-import bgImg from './garden_ui/sky.png';
 import PlantDrawer from "./garden_ui/plantDrawer";
-
-import http from "../util/axios_packaged";
 import GardenLoading from "./garden_ui/loading";
+//Utils
+import http from "../util/axios_packaged";
 
+//BG images
+import sky from './garden_ui/background_img/sky.png';
+import autumn from './garden_ui/background_img/Autumn.png';
+const BACKGROUND_IMGS = {
+    'normal': sky,
+    'autumn':autumn
+}
 
+/**
+ * main UI of a garden
+ */
 export default class Garden extends React.Component {
     constructor(props) {
         super(props);
@@ -38,7 +46,7 @@ export default class Garden extends React.Component {
                 <Box style={
                     {width: '100%',
                         height: '260px',
-                        backgroundImage: 'url(' + bgImg +')',
+                        backgroundImage: 'url(' + BACKGROUND_IMGS[this.state.fieldInfo.sceneBackground?this.state.fieldInfo.sceneBackground:'normal'] +')',
                         backgroundPosition: 'center',
                         backgroundSize: 'contain',
                 }} >
@@ -66,6 +74,10 @@ export default class Garden extends React.Component {
         );
     }
 
+    /**
+     * handle tool bar click
+     * @param i the index of button clicked
+     */
     handleToolBarClick(i) {
         let stateTemp = JSON.parse(JSON.stringify(this.state));
         stateTemp.currentTool = i;
@@ -76,6 +88,11 @@ export default class Garden extends React.Component {
         // this.postData(stateTemp);
     }
 
+    /**
+     * handle field click
+     * @param i the index of grid clicked
+     * @param gridOption operation on the clicked filed, null default
+     */
     handleFieldClick(i, gridOption=null) {
 
         /* Value increments of items */
@@ -161,7 +178,13 @@ export default class Garden extends React.Component {
         this.postData(stateTemp);
     }
 
-    /* Operations on a single grid*/
+    /**
+     * Operations on a single grid
+     * @param mode remove or plant
+     * @param gridIndex the index of grid chosen
+     * @param stateTemp the state to be changed
+     * @returns {*} changed state
+     */
     gridOptions(mode, gridIndex, stateTemp) {
         // do operations
         if (mode === 'remove') {
@@ -182,6 +205,10 @@ export default class Garden extends React.Component {
         return stateTemp;
     }
 
+    /**
+     * plant a flower
+     * @param the key of flower
+     */
     plantFlower(flower) {
         const SPECIAL_RATE = 0.7
         const COMMON_FLOWERS = ['eustoma', 'tulip', 'rose'];
@@ -224,15 +251,24 @@ export default class Garden extends React.Component {
         }
     }
 
+    /**
+     * post game data to the server
+     * @param data game state
+     */
     postData(data) {
         http.post('/gameData/save', data).then(response => {console.log(response);})
             .catch(res => {
+                if (!res.response) {console.log(res); return ;}
                 if (res.response.status === 422) {window.location = '/'; alert("user not found")}
                 if (res.response.status === 500) {window.location.reload(); alert(res.response.data)}
                 console.log(res);
             })
     }
 
+    /**
+     * pull game data from the server
+     * @returns {Promise<void>}
+     */
     async pullData() {
         /**
          * @type {{
@@ -285,6 +321,7 @@ export default class Garden extends React.Component {
                 fenceImage: gameInfo.fieldInfo.fenceImage,
                 gridBackground: gameInfo.fieldInfo.gridBackground,
                 gridOutline: gameInfo.fieldInfo.gridOutline,
+                sceneBackground: gameInfo.fieldInfo.sceneBackground,
 
                 // information of all grids
                 grids: gameInfo.fieldInfo.grids,

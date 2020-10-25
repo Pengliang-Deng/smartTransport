@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
 const expressJwt = require('express-jwt');
 
 // NO IDEAS WHY THIS

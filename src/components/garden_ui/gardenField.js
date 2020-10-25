@@ -15,7 +15,7 @@ import fence_stone from './fence/stone.png';
 import fence_metal from './fence/metal.png';
 import fence_wood_premium from './fence/wood_premium.png';
 
-import ground from './ground.png';
+import ground from './general/ground.png';
 import outline from "../containers/outline.png";
 
 //bricks
@@ -101,7 +101,7 @@ const fieldImages = {
     }
 }
 
-
+/* whole field of a garden */
 export default function GardenField(props){
     const tileBackground = fieldImages.tileBackground[props.fieldInfo.tileBackground];
     const fenceImage = fieldImages.fenceImage[props.fieldInfo.fenceImage];
@@ -170,6 +170,7 @@ export default function GardenField(props){
         )
 }
 
+/* a grid in the garden field */
 function GardenFieldGrid(props) {
     const useStyles = makeStyles((theme) => ({
         filedGrid: {

@@ -4,7 +4,6 @@ import {createMuiTheme, makeStyles, ThemeProvider} from '@material-ui/core/style
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Fade from '@material-ui/core/Fade';
 import {lightBlue, lightGreen} from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
@@ -18,6 +17,7 @@ const useStyles = makeStyles({
     }
 });
 
+/* progress bar for a single grid */
 function LinearProgressWithLabel(props) {
     const classes=useStyles();
     return (

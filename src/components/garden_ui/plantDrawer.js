@@ -69,6 +69,7 @@ const themeText = createMuiTheme({
     },
 });
 
+/* The drawer of planting menu*/
 export default function PlantDrawer(props) {
     const classes = useStyles();
     const [state, setState] = React.useState({

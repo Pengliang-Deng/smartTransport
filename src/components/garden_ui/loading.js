@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+/* loading animation of garden UI and store UI*/
 export default function GardenLoading() {
     const classes = useStyles();
     const[count, setCount] = React.useState(0)

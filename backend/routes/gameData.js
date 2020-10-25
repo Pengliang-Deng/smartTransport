@@ -1,10 +1,14 @@
+const changeGameDataFuncs = require('./game_utils/changeGameData')
+
 const initGameData = require('./game_utils/initGameData');
 
 const router = require('express').Router();
-let gameData = require('../models/gameData.model')
+let gameData = require('../models/gameData.model');
 let User = require('../models/user.model')
 
-
+/**
+ * get game data
+ */
 router.route('/get').get(async(req, res) => {
     const user = await User.findOne({
         _id: req.user._id
@@ -13,20 +17,23 @@ router.route('/get').get(async(req, res) => {
         return res.status(422).json("User Not Found");
     }
 
-    const data = await gameData.findOne({
+    let data = await gameData.findOne({
         uid: req.user._id
-    })
-    if (data) {
-        return res.json(data);
-    }
-    else {
+    });
+    if (!data) {
         const newGameData = initGameData(user.username, user._id);
         newGameData.save();
-        return res.json(newGameData);
+        data = newGameData;
     }
+
+    dailyWater(data, user);
+
+    return res.json(data);
 });
 
-
+/**
+ * post game data and save
+ */
 router.route('/save').post(async(req, res) => {
     const newData = req.body;
     console.log(req.body)
@@ -59,5 +66,13 @@ router.route('/save').post(async(req, res) => {
     return res.json("game data updated");
 });
 
+async function dailyWater(data, user) {
+    if (!data.lastLoginDate || data.lastLoginDate !== new Date().getUTCDate().toString()) {
+        gameData.findOneAndUpdate({uid: user._id},
+            {$set: {lastLoginDate: new Date().getUTCDate()}})
+            .catch(error => {console.error(error)});
+        changeGameDataFuncs.increaseWater(user._id, 5);
+    }
+}
 
 module.exports = router;
