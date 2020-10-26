@@ -28,16 +28,16 @@ app.use(expressJwt({
     algorithms: ['HS256'],
     secret: 'SmartTransport123'  // signed secret key
 }).unless({
-    path: ['/', '/add']  // path accessed without token
+    path: ['/api/', '/api/add']  // path accessed without token
 }))
 
 const userRouter = require('./routes/users');
 
-app.use('/', userRouter);
+app.use('/api/', userRouter);
 // app.use('/register', userRouter);
 
 const gameDataRouter = require('./routes/gameData')
-app.use('/gameData/', gameDataRouter);
+app.use('/api/gameData/', gameDataRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

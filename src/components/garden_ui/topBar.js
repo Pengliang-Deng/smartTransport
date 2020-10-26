@@ -4,7 +4,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Box from "@material-ui/core/Box";
-import MenuIcon from "@material-ui/icons/Menu";
+import StoreIcon from "@material-ui/icons/Store";
 import PixelAppBar from "../containers/PixelAppBar";
 import { Link }from 'react-router-dom';
 
@@ -50,8 +50,8 @@ export default function TopBar(props) {
                 </Link>
                 <h1 className={classes.title}>{props.title}</h1>
                 <Link to={'/store'} className={classes.menuButton}>
-                    <IconButton edge="end" color="inherit" aria-label="menu">
-                        <MenuIcon />
+                    <IconButton edge="end" color="default" aria-label="menu">
+                        <StoreIcon style={{fontSize: '40'}} />
                     </IconButton>
                 </Link>
             </Toolbar>

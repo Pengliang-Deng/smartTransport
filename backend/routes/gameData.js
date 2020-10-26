@@ -31,6 +31,20 @@ router.route('/get').get(async(req, res) => {
     return res.json(data);
 });
 
+
+/* just for testing purpose */
+// router.route('/test').get(async(req, res) => {
+//     const user = await User.findOne({
+//         _id: req.user._id
+//     })
+//     if(!user) {
+//         return res.status(422).json("User Not Found");
+//     }
+//
+//     changeGameDataFuncs.increaseRareSeed(user._id, 5);
+//     return res
+// })
+
 /**
  * post game data and save
  */
