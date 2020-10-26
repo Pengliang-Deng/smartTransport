@@ -58,4 +58,18 @@ function increaseFertilizer (uid, number) {
     return true;
 }
 
-module.exports = {increaseCoin, increaseFertilizer, increaseSun, increaseWater};
+/**
+ * increase mystery seed
+ * @param uid user's id
+ * @param number increment
+ * @returns {boolean} ture if succeeded
+ */
+function increaseRareSeed (uid, number) {
+    if (number < 0) return false;
+    gameData.findOneAndUpdate({uid: uid},
+        {$inc: {"itemsInfo.seeds.mystery": number}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+module.exports = {increaseCoin, increaseFertilizer, increaseSun, increaseWater, increaseRareSeed};

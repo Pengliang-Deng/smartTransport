@@ -19,17 +19,17 @@ const seedListItemsInfo = {
     "eustoma": {
         name: 'Eustoma Seed',
         image: eustoma_seed,
-        description: 'Eustoma description here... xxxxxxxxxxxxxxxxxxxxxxx',
+        description: 'Full of love, lenient',
     },
     "tulip": {
         name: 'Tulip Seed',
         image: tulip_seed,
-        description: 'Tulip description here... xxxxxxxxxxxxxxxxxxxxxxx',
+        description: 'Kind and considerate',
     },
     "rose": {
         name: 'Rose Seed',
         image: rose_seed,
-        description: 'Eustoma description here... xxxxxxxxxxxxxxxxxxxxxxx',
+        description: 'Romance',
     },
     "mystery": {
         name: 'Mystery',
