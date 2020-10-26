@@ -6,9 +6,11 @@ import Grid from '@material-ui/core/Grid';
 // import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@material-ui/core'
 import axios from 'axios'
+import http from '../util/axios_packaged'
 
 import PixelTypography from './PixelTypography'
 
+const backEndURL = 'http://192.168.3.4:5000/';
 
 const styles = {
     container: {
@@ -75,11 +77,12 @@ export default class Launch extends Component {
         // console.log(userInfo)
         
 
-        axios.post('http://localhost:5000/', userInfo)
+        http.post('/', userInfo)
         .then((res) => {
             const user = res.data
             // console.log(typeof(user))
             if (user) {
+                localStorage.setItem('jwt-token', user.data.token); // store token
                 window.location = '/homepage'
             }
         })
@@ -92,7 +95,7 @@ export default class Launch extends Component {
             password: this.state.password
         }
 
-        axios.post('http://localhost:5000/add', userInfo)
+        http.post('/add', userInfo)
         .then((res) => {console.log(res.data)})
 
     }
