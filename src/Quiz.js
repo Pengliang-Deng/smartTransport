@@ -5,15 +5,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import backgroundImg from './imgs/quizBg.jpg';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import {Link} from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
 import PixelTypography from './components/PixelTypography';
+import http from '../src/util/axios_packaged'
 
 const useStyle = makeStyles((theme) => ({
     paperCard: {
@@ -29,12 +24,15 @@ const useStyle = makeStyles((theme) => ({
         wordWrap: 'break-word',
         hyphens: 'auto',
         borderRadius: '18px',
+        // width: '60%'
     },
     bgImg: {
         backgroundImage: `url(${backgroundImg})`,
         backgroundRepeat:'no-repeat',
         backgroundSize: 'cover',
         marginTop: 4,
+        backgroundPosition: 'center',
+        width: '70vw',
         // backgroundColor: 'green',
     },
     container: {
@@ -81,10 +79,11 @@ const useStyle = makeStyles((theme) => ({
 export default function Quiz() {
     const classes = useStyle();
 
-    const [question, setQuestion] = useState('');
+    const [question, setQuestion] = useState({});
     const [userAnswer, setUserAnswer] = useState('');
     const [correctness, setCorrectness] = useState(false);
     const [open, setOpen] = useState(false);
+
     
     useEffect(() => {
         const randomIndex = Math.floor(Math.random()*10);
@@ -100,7 +99,8 @@ export default function Quiz() {
             setCorrectness(true);
             // Open modal
             setOpen(true);
-            // To do something with user's info
+            // reward users with coins
+            addingCoins(10);
             // Showing info that answer correctly and stop user from answering
         } else {
             setCorrectness(false);
@@ -112,26 +112,23 @@ export default function Quiz() {
         }
     }
 
+    const addingCoins = function(num) {
+        http.post('/gameData/add/coins', {increment: num}).then(response => {console.log(response);})
+        .catch(res => {
+            // nothing
+        })
+    }
+
     const handleClose = (event) => {
         setOpen(false);
         window.location = '/challenges';
     }
-
+    
     const correctText = 'Your Answer is correct. 10 Points have been added.';
-    const falseText = 'Sorry, your answer is not correct. Please try tomorrow.'
+    const falseText = `Sorry, your answer is not correct. For this question: ${question.question} Correct answer is ${question.answer}`
 
     return (
         <div>
-            {/* <AppBar>
-                <Toolbar variant='dense'>
-                    <IconButton edge="start" className={classes.arrowButton} color="inherit">
-                        <Link className={classes.link} to='/challenges'>
-                            <ArrowBack />
-                        </Link>
-                    </IconButton>
-                    <Typography variant='h6' color='inherit'> Quiz</Typography>
-                </Toolbar>
-            </AppBar> */}
             <div className={classes.bgImg} >
                 <Container className={classes.container} maxWidth='xs'> 
                     <Paper className={classes.paperCard}>{<PixelTypography className={classes.title} fontStyle='textS2' variant='h5' text={question.question} />}</Paper>
@@ -247,9 +244,9 @@ const questionsArray = [
     },
     {
         question: "What is the best way to warm an engine before driving or cool down a vehicle’s cab in the summer?",
-        a: "Drive the vehicle at a slow pace",
-        b: "Turn the car on, while parked, with the AC on for a couple minutes",
-        c: "Drive the vehicle at a fast pace",
+        a: "Drive vehicles at a slow pace",
+        b: "Turn the car on with the AC on for a couple minutes",
+        c: "Drive vehicles at a fast pace",
         d: "Leave the car idling for awhile before driving",
         answer: "a",
     }

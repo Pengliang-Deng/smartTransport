@@ -14,6 +14,7 @@ const backEndURL = 'http://192.168.3.4:5000/';
 
 const styles = {
     container: {
+        marginTop: 20,
         paddingLeft: 25,
         paddingRight: 25,
     },

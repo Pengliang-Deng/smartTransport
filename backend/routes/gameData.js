@@ -4,7 +4,8 @@ const initGameData = require('./game_utils/initGameData');
 
 const router = require('express').Router();
 let gameData = require('../models/gameData.model');
-let User = require('../models/user.model')
+let User = require('../models/user.model');
+const { increaseCoin } = require('./game_utils/changeGameData');
 
 /**
  * get game data
@@ -31,6 +32,59 @@ router.route('/get').get(async(req, res) => {
     return res.json(data);
 });
 
+/**
+ * get an object with user name and coin amount
+ */
+router.route('/get/coins').get(async(req, res) => {
+    const user = await User.findOne({
+        _id: req.user._id
+    })
+    if(!user) {
+        return res.status(422).json("User Not Found");
+    }
+
+    let data = await gameData.findOne({
+        uid:req.user._id
+    })
+
+    let coins = {username:data.playerInfo.playerName, coins: data.itemsInfo.coins}
+
+    return res.json(coins)
+})
+
+/**
+ * get the counts of weekly challenges
+ */
+router.route('/get/taskStatus').get(async(req, res) => {
+    const user = await User.findOne({
+        _id: req.user._id
+    })
+    if(!user) {
+        return res.status(422).json("User Not Found");
+    }
+
+    let data = await gameData.findOne({
+        uid:req.user._id
+    })
+
+    let taskStatus = {
+        transit: data.weeklyTasks.transit, 
+        walk: data.weeklyTasks.walk,
+        bicycle: data.weeklyTasks.bicycle
+    }
+
+    return res.json(taskStatus)
+})
+
+/**
+ * add certain amount of coins
+ */
+router.route('/add/coins').post(async(req, res) => {
+    const increment = req.body.increment;
+    console.log(req.body)
+    console.log(req);
+    increaseCoin(req.user._id, increment)
+})
 
 /* just for testing purpose */
 // router.route('/test').get(async(req, res) => {

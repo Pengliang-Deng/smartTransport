@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100vw',
         backgroundRepeat:'no-repeat',
         backgroundSize: 'cover',
+        backgroundPosition:'center'
     },
     root2: {
         display: 'flex',
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     },
     radioGroup: {
         // fontSize: '1.2rem',
-        paddingLeft: '38%',
+        paddingLeft: '35%',
     },
     button: {
         marginTop: '10%',
@@ -66,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '40px',
         boxShadow: '2px 4px #B4A582',
         border: '2px solid #DAC9A6',
+        width: '80%'
     },
 }));
 
@@ -132,6 +134,7 @@ export default function HomePage(props) {
             }
             <BtmNav current={0} />
         </div>
+        
         
     )
     

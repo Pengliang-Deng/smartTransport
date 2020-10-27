@@ -20,6 +20,16 @@ module.exports = initFunctions;
  */
 const initialGameInfo = {
     uid: null ,
+    trackingStatus: {
+        isTracking: false,
+        startPoint: '',
+        endPoint: ''
+    },
+    weeklyTasks: {
+        transit: 0,
+        walk: 0,
+        bicycle: 0
+    },
     fieldInfo: {
         // number of grids
         size: 9,

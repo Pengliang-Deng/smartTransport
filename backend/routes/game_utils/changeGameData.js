@@ -6,7 +6,7 @@ let gameData = require('../../models/gameData.model');
  * increase player's coin resource
  * @param uid user's id
  * @param number increment
- * @returns {boolean} ture if succeeded
+ * @returns {boolean} true if succeeded
  */
 function increaseCoin (uid, number) {
     if (number < 0) return false;

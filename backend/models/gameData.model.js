@@ -7,6 +7,16 @@ const mongoose = require('mongoose');
 const gameDataSchema = new mongoose.Schema({
     uid: String,
     lastLoginDate: String ,
+    trackingStatus: {
+        isTracking: Boolean,
+        startPoint: String,
+        endPoint: String
+    },
+    weeklyTasks: {
+        transit: Number,
+        walk: Number,
+        bicycle: Number
+    },
     fieldInfo: {
         size: {
             type: Number,
