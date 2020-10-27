@@ -27,6 +27,7 @@ const useStyles = makeStyles({
         backgroundColor:'#FCFAF2',
         borderRadius:'13px',
         boxShadow: '2px 4px #DAC9A6',
+        paddingTop:'15px'
     },
     gardenButton: {
         marginLeft: '10px',
@@ -34,6 +35,7 @@ const useStyles = makeStyles({
         backgroundColor:'#FCFAF2',
         borderRadius:'50px',
         boxShadow: '2px 4px #DAC9A6',
+        paddingTop:'15px'
     }
 })
 
@@ -67,17 +69,17 @@ export default function BtmNav(props) {
             >
                 
                 <BottomNavigationAction className={styles.item} onClick={trackNav} 
-                label={<PixelTypography fontStyle='textS2' variant='h7' text="Tracker" />}
+                label={<PixelTypography fontStyle='textS2' variant='button' text="Tracker" />}
                 icon={<Timer />} /> 
                     
             
                 <BottomNavigationAction className={styles.gardenButton} onClick={gardenNav} 
-                label={<PixelTypography fontStyle='textS2' variant='h7' text="Garden" />} 
+                label={<PixelTypography fontStyle='textS2' variant='button' text="Garden" />} 
                 icon={<House />} />
         
 
                 <BottomNavigationAction className={styles.item} onClick={challengesNav}
-                 label={<PixelTypography fontStyle='textS2' variant='h7' text="Challenges" />}
+                 label={<PixelTypography fontStyle='textS2' variant='button' text="Challenges" />}
                  icon={<QuestionAnswer />} />
 
             </BottomNavigation>

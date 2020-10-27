@@ -1,6 +1,22 @@
 const mongoose = require('mongoose');
 
+/**
+ * all game data of a player
+ * @type {mongoose.Schema}
+ */
 const gameDataSchema = new mongoose.Schema({
+    uid: String,
+    lastLoginDate: String ,
+    trackingStatus: {
+        isTracking: Boolean,
+        startPoint: String,
+        endPoint: String
+    },
+    weeklyTasks: {
+        transit: Number,
+        walk: Number,
+        bicycle: Number
+    },
     fieldInfo: {
         size: {
             type: Number,
@@ -12,6 +28,7 @@ const gameDataSchema = new mongoose.Schema({
         fenceImage: String,
         gridBackground: String,
         gridOutline: String,
+        sceneBackground: String,
 
         // information of all the grids
         grids: [
@@ -25,7 +42,6 @@ const gameDataSchema = new mongoose.Schema({
     },
     playerInfo: {
         playerName: String,
-        /* TODO */
     },
     itemsInfo: {
         coins: Number,
@@ -34,12 +50,20 @@ const gameDataSchema = new mongoose.Schema({
             fertilizer: Number,
             sunny: Number,
         },
-        seeds: [
-            {
-                name: String,
-                amount: Number,
-            }
-        ]
+        seeds: {
+
+        },
+        styles: {
+            tileBackground: [
+                {type: String}
+            ],
+            fence: [
+                {type: String}
+            ],
+            sceneBackground: [
+                {type: String}
+            ]
+        }
     }
 
 })

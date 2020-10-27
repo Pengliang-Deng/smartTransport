@@ -1,93 +1,55 @@
-import './index.css';
+import '../index.css';
 // React
 import React from 'react';
 // Material-UI
 import Box from '@material-ui/core/Box';
 // Components
-import TopBar from "./components/garden_ui/topBar";
-import GardenToolsBar from "./components/garden_ui/gardenToolsBar";
-import GardenField from "./components/garden_ui/gardenField";
+import TopBar from "./garden_ui/topBar";
+import GardenToolsBar from "./garden_ui/gardenToolsBar";
+import GardenField from "./garden_ui/gardenField";
+import PlantDrawer from "./garden_ui/plantDrawer";
+import GardenLoading from "./garden_ui/loading";
+//Utils
+import http from "../util/axios_packaged";
 
-import bgImg from './components/garden_ui/sky.png';
-import PlantDrawer from "./components/garden_ui/plantDrawer";
+//BG images
+import sky from './garden_ui/background_img/sky.png';
+import autumn from './garden_ui/background_img/Autumn.png';
+const BACKGROUND_IMGS = {
+    'normal': sky,
+    'autumn':autumn
+}
 
-
+/**
+ * main UI of a garden
+ */
 export default class Garden extends React.Component {
     constructor(props) {
         super(props);
-        /**
-         * @type {{
-         *  selected: number,
-         *  fieldInfo: {size:number, tileBackground: string, fenceImage: string,
-         *       gridBackground: string, gridOutline: string, grids: [], },
-         *  playerInfo: {playerName: string},
-         *  itemsInfo: {coins: number, resources: {water:number, fertilizer: number, sunny: number},seeds: []}
-         * }}
-         */
-        const gameInfo = props.gameInfo;
-        if (gameInfo.fieldInfo.grids.length < gameInfo.fieldInfo.size) {
-            let grids = gameInfo.fieldInfo.grids;
-            const size = grids.length;
-            for (let i=0; i < gameInfo.fieldInfo.size - size; i++) {
-                grids = grids.concat(
-                    {
-                        flower: 'none',
-                        status: 'normal',
-                        growthValue: 0,
-                        waterValue: 0
-                    });
-            }
-            for (let i=0; i < grids.length; i++) {
-                grids[i].preGrowthValue = grids[i].growthValue;
-                grids[i].preWaterValue = grids[i].waterValue;
-            }
-            gameInfo.fieldInfo.grids = grids;
-        }
         this.state = {
-            currentTool: 0,
-            // current selected grid
-            selected: null,
-
-            fieldInfo: {
-                // number of grids in the field
-                size: gameInfo.fieldInfo.size,
-                // styles of the garden
-                tileBackground: gameInfo.fieldInfo.tileBackground,
-                fenceImage: gameInfo.fieldInfo.fenceImage,
-                gridBackground: gameInfo.fieldInfo.gridBackground,
-                gridOutline: gameInfo.fieldInfo.gridOutline,
-
-                // information of all grids
-                grids: gameInfo.fieldInfo.grids,
-
-            },
-            playerInfo: {
-                playerName: gameInfo.playerInfo.playerName,
-            },
-            itemsInfo: {
-               coins: gameInfo.itemsInfo.coins,
-               resources: {
-                   /* number of resources */
-                   water: gameInfo.itemsInfo.resources.water,
-                   fertilizer: gameInfo.itemsInfo.resources.fertilizer,
-                   sunny: gameInfo.itemsInfo.resources.sunny,
-               },
-                seeds: gameInfo.itemsInfo.seeds
-            }
+            loaded: false, // wait for loading
         }
     }
 
+    componentDidMount() {
+        this.pullData();
+    }
+
     render() {
+        if (this.state.loaded === false) {
+            return (<GardenLoading/>);
+        }
+
         return(
-            <Box style={{left: 0, background: '#42A5F5'}} container className="app" xs={12}>
+            <Box style={{left: 0, background: '#42A5F5'}} className="app" xs={12}>
                 {/*Theme background*/}
                 <Box style={
                     {width: '100%',
                         height: '260px',
-                        backgroundImage: 'url(' + bgImg +')',
+                        backgroundImage: 'url(' + BACKGROUND_IMGS[this.state.fieldInfo.sceneBackground?this.state.fieldInfo.sceneBackground:'normal'] +')',
                         backgroundPosition: 'center',
                         backgroundSize: 'contain',
-                }} container>
+                }} >
                 </Box>
                 {/*Title bar on the top*/}
                 <TopBar title={this.state.playerInfo.playerName + "'s Garden"}/>
@@ -112,6 +74,10 @@ export default class Garden extends React.Component {
         );
     }
 
+    /**
+     * handle tool bar click
+     * @param i the index of button clicked
+     */
     handleToolBarClick(i) {
         let stateTemp = JSON.parse(JSON.stringify(this.state));
         stateTemp.currentTool = i;
@@ -119,8 +85,14 @@ export default class Garden extends React.Component {
             stateTemp.selected = null;
         }
         this.setState(stateTemp);
+        // this.postData(stateTemp);
     }
 
+    /**
+     * handle field click
+     * @param i the index of grid clicked
+     * @param gridOption operation on the clicked filed, null default
+     */
     handleFieldClick(i, gridOption=null) {
 
         /* Value increments of items */
@@ -191,6 +163,7 @@ export default class Garden extends React.Component {
                 if (stateTemp.fieldInfo.grids[j].flower === "none") continue;
                 stateTemp.fieldInfo.grids[j].growthValue = Math.min(100, stateTemp.fieldInfo.grids[j].growthValue + SUN_INCREMENT);
                 stateTemp.fieldInfo.grids[j].waterValue = Math.min(100, stateTemp.fieldInfo.grids[j].waterValue + SUN_WATER_INCREAMENT);
+                stateTemp.itemsInfo.resources.sun = Math.max(0, this.state.itemsInfo.resources.sun - 1);
             }
         }
 
@@ -202,9 +175,16 @@ export default class Garden extends React.Component {
         }
 
         this.setState(stateTemp);
+        this.postData(stateTemp);
     }
 
-    /* Operations on a single grid*/
+    /**
+     * Operations on a single grid
+     * @param mode remove or plant
+     * @param gridIndex the index of grid chosen
+     * @param stateTemp the state to be changed
+     * @returns {*} changed state
+     */
     gridOptions(mode, gridIndex, stateTemp) {
         // do operations
         if (mode === 'remove') {
@@ -225,6 +205,10 @@ export default class Garden extends React.Component {
         return stateTemp;
     }
 
+    /**
+     * plant a flower
+     * @param the key of flower
+     */
     plantFlower(flower) {
         const SPECIAL_RATE = 0.7
         const COMMON_FLOWERS = ['eustoma', 'tulip', 'rose'];
@@ -261,8 +245,104 @@ export default class Garden extends React.Component {
             };
             stateTemp.fieldInfo.grids[this.state.selected] = selectedGrid;
             this.setState(stateTemp);
+            this.postData(stateTemp);
             // confirmation and plant
             this.plantDrawer.toggle(false);
         }
+    }
+
+    /**
+     * post game data to the server
+     * @param data game state
+     */
+    postData(data) {
+        http.post('/gameData/save', data).then(response => {console.log(response);})
+            .catch(res => {
+                if (!res.response) {console.log(res); return ;}
+                if (res.response.status === 422) {window.location = '/'; alert("user not found")}
+                if (res.response.status === 500) {window.location.reload(); alert(res.response.data)}
+                console.log(res);
+            })
+    }
+
+    /**
+     * pull game data from the server
+     * @returns {Promise<void>}
+     */
+    async pullData() {
+        /**
+         * @type {{
+         *  selected: number,
+         *  fieldInfo: {size:number, tileBackground: string, fenceImage: string,
+         *       gridBackground: string, gridOutline: string, grids: [], },
+         *  playerInfo: {playerName: string},
+         *  itemsInfo: {coins: number, resources: {water:number, fertilizer: number, sunny: number},seeds: {}}
+         * }}
+         */
+        let gameInfo;
+        await http.get('/gameData/get')
+            .then((res) => {
+                gameInfo = res.data;
+            })
+            .catch((reason) => {
+                window.location = '/';
+            })
+
+        if (gameInfo.fieldInfo.grids.length < gameInfo.fieldInfo.size) {
+            let grids = gameInfo.fieldInfo.grids;
+            const size = grids.length;
+            for (let i=0; i < gameInfo.fieldInfo.size - size; i++) {
+                grids = grids.concat(
+                    {
+                        flower: 'none',
+                        status: 'normal',
+                        growthValue: 0,
+                        waterValue: 0
+                    });
+            }
+            for (let i=0; i < grids.length; i++) {
+                grids[i].preGrowthValue = grids[i].growthValue;
+                grids[i].preWaterValue = grids[i].waterValue;
+            }
+            gameInfo.fieldInfo.grids = grids;
+        }
+
+        const state = {
+            loaded: true, // game data loaded
+            currentTool: 0,
+            // current selected grid
+            selected: null,
+
+            fieldInfo: {
+                // number of grids in the field
+                size: gameInfo.fieldInfo.size,
+                // styles of the garden
+                tileBackground: gameInfo.fieldInfo.tileBackground,
+                fenceImage: gameInfo.fieldInfo.fenceImage,
+                gridBackground: gameInfo.fieldInfo.gridBackground,
+                gridOutline: gameInfo.fieldInfo.gridOutline,
+                sceneBackground: gameInfo.fieldInfo.sceneBackground,
+
+                // information of all grids
+                grids: gameInfo.fieldInfo.grids,
+
+            },
+            playerInfo: {
+                playerName: gameInfo.playerInfo.playerName,
+            },
+            itemsInfo: {
+                coins: gameInfo.itemsInfo.coins,
+                resources: {
+                    /* number of resources */
+                    water: gameInfo.itemsInfo.resources.water,
+                    fertilizer: gameInfo.itemsInfo.resources.fertilizer,
+                    sunny: gameInfo.itemsInfo.resources.sunny,
+                },
+                seeds: gameInfo.itemsInfo.seeds,
+                styles: gameInfo.itemsInfo.styles,
+            },
+        }
+
+        this.setState(state);
     }
 }

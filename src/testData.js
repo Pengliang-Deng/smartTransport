@@ -79,10 +79,10 @@ export const gameInfo1 = {
             sunny: 200,
         },
         seeds: {
-            'eustoma': 10,
-            'tulip': 10,
-            'rose': 8,
-            'mystery': 5,
+            'eustoma': 100,
+            'tulip': 100,
+            'rose': 80,
+            'mystery': 50,
         },
         styles: {
             tileBackground: [
@@ -98,6 +98,8 @@ export const gameInfo1 = {
                 'stone',
                 'metal',
                 'wood-premium',
+            ],
+            sceneBackground: [
             ]
         }
     }

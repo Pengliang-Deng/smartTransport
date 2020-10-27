@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import PixelTypography from './PixelTypography';
 import PixelAppBar from './containers/PixelAppBar';
-import People from '@material-ui/icons/People'
+import People from '@material-ui/icons/People';
+import http from '../util/axios_packaged'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,11 +46,31 @@ const useStyles = makeStyles((theme) => ({
 export default function AvatarBar(props) {
     const classes = useStyles();
     const [accountInfo, setState] = useState({
-        username: "Dumpling",
-        coins: 100
+        username: "",
+        coins: 0
     })
 
-    // loading user info from database
+    /**
+     * get user name and corresponding remaining coins
+     * 
+     * return an object with format of {username, coins}
+     */
+    const pullBasicInfo = async () => {
+        let basicInfo;
+        await http.get('/gameData/get/coins')
+            .then((res) => {
+                basicInfo = res.data;
+            })
+            .catch((reason) => {
+                // window.location = '/';
+            })
+        setState({
+            username: basicInfo.username,
+            coins: basicInfo.coins
+        })
+    }
+
+    useEffect(() => {pullBasicInfo()})
 
     const { username, coins } = accountInfo;
 

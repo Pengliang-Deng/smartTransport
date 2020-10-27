@@ -4,11 +4,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Box from "@material-ui/core/Box";
-import MenuIcon from "@material-ui/icons/Menu";
+import StoreIcon from "@material-ui/icons/Store";
 import PixelAppBar from "../containers/PixelAppBar";
 import { Link }from 'react-router-dom';
 
-const userStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
 
     topBar: {
         top: '4px',
@@ -19,13 +19,16 @@ const userStyles = makeStyles((theme) => ({
     menuButton: {
         marginLeft: theme.spacing(2),
         color: 'black',
+        position: 'absolute',
+        right:'3%',
     },
     exitButton: {
         marginRight: theme.spacing(2),
-        color: 'black'
+        color: 'black',
     },
     title: {
         // flexGrow: 1,
+        // fontFamily: "'VT323', monospace",
         fontFamily: '"Press Start 2P"',
         // fontStyle: 'cursive',
         color: 'black',
@@ -33,22 +36,24 @@ const userStyles = makeStyles((theme) => ({
     },
 }));
 
-
+/* App Bar on the top of garden UI*/
 export default function TopBar(props) {
-    const classes = userStyles();
+    const classes = useStyles();
     return(
 
         <PixelAppBar position="fixed" className={classes.topBar}>
-            <Toolbar>
+            <Toolbar position="relative">
                 <Link to='/homepage'>
                     <IconButton edge="start" className={classes.exitButton} color={"inherit"}>
                         <ArrowBackIcon />
                     </IconButton>
                 </Link>
                 <h1 className={classes.title}>{props.title}</h1>
-                <IconButton edge="end" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <MenuIcon />
-                </IconButton>
+                <Link to={'/store'} className={classes.menuButton}>
+                    <IconButton edge="end" color="default" aria-label="menu">
+                        <StoreIcon style={{fontSize: '40'}} />
+                    </IconButton>
+                </Link>
             </Toolbar>
         </PixelAppBar>
 
