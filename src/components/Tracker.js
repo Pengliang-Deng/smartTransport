@@ -243,12 +243,13 @@ export default class Tracker extends React.Component {
                 
                 let coins;
                 http.get('/gameData/calculate').then((res) => {
-                    coins = res.data
+                    coins = res.data;
+                    window.alert(`${coins} have been rewarded!`)
+                    window.location.reload();
                 })
 
-                window.alert(`${coins} have been rewarded!`)
-                window.location.reload()
-                return 
+                return;
+
                 // console.log("1")
                 
                 
@@ -331,8 +332,8 @@ export default class Tracker extends React.Component {
                     <PixelTypography fontStyle="textS2" variant='h5' text={`Address: `+ this.state.address} />
                 </Grid>
                 <Grid item style={styles.margin}>
-                    <Button onClick={this.confirmLocation} style={styles.button2} size='large' variant="contained" color="secondary" >
-                        <PixelTypography fontStyle='textS2' variant='h5' text="CONFIRM LOCATION" />
+                    <Button onClick={() => this.confirmLocation()} style={styles.button2} size='large' variant="contained" color="secondary" >
+                        <PixelTypography fontStyle='textS2' variant='h5' text={this.state.hasConfirmedStartPosition?"END TRIP":"CONFIRM LOCATION"} />
                     </Button>
                 </Grid>
             </Grid>
