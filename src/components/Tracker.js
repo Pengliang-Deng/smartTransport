@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 // import TextField from '@material-ui/core/TextField';
 import AutoComplete from "react-google-autocomplete";
 import PixelTypography from './PixelTypography';
-
+import axios from 'axios'
 
 
 Geocode.setApiKey("AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM")
@@ -80,7 +80,45 @@ export default class Tracker extends React.Component {
 
                     })
             });
-        } 
+        } else { // handle the issue that geolocation request from http site is unavailable on iOS
+            axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM').catch(reason => {
+                console.log(reason);
+            }).then(response => {
+                this.setState({
+                        mapPosition: {
+                            lat: response.data.location.lat,
+                            lng: response.data.location.lng,
+                        },
+                        markerPosition: {
+                            lat: response.data.location.lat,
+                            lng: response.data.location.lng,
+                        }
+                    },
+                    () => {
+                        Geocode.fromLatLng(response.data.location.lat, response.data.location.lng).then(
+                            response => {
+                                console.log(response)
+                                const address = response.results[0].formatted_address,
+                                    addressArray = response.results[0].address_components,
+                                    city = this.getCity(addressArray),
+                                    area = this.getArea(addressArray),
+                                    state = this.getState(addressArray);
+                                console.log('city', city, area, state);
+                                this.setState({
+                                    address: (address) ? address : '',
+                                    area: (area) ? area : '',
+                                    city: (city) ? city : '',
+                                    state: (state) ? state : '',
+                                })
+                            },
+                            error => {
+                                console.error(error);
+                            }
+                        );
+
+                    })
+            })
+        }
     };
 
     getCity = (addressArray) => {

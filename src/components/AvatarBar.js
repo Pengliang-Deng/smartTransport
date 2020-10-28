@@ -65,6 +65,7 @@ export default function AvatarBar(props) {
             .catch((reason) => {
                 // window.location = '/';
             })
+        if (!basicInfo) window.location.reload(); // handle null value caused by timeout
         setState({
             username: basicInfo.username,
             coins: basicInfo.coins
