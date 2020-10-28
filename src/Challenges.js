@@ -227,21 +227,31 @@ useEffect(() => {pullTaskInfo()}, [])
                     <div className={classes.taskBoxContainer}>
                         {transitComplete[1]?
                             <ButtonBase onClick={claimReward}>
-                                <TaskBox  text="Take Transit Three Times" type='Transit' canClaim={transitComplete[1]} counts={transitComplete[0]} goal="3" url={transitImg}/>
+                                <TaskBox  text="Transit 3 Times" type='Transit' canClaim={transitComplete[1]} counts={transitComplete[0]} goal="3" url={transitImg}/>
                             </ButtonBase>
                             :
-                            <TaskBox  text="Take Transit Three Times" type='Transit' canClaim={transitComplete[1]} counts={transitComplete[0]} goal="3" url={transitImg}/>
+                            <TaskBox  text="Transit 3 Times" type='Transit' canClaim={transitComplete[1]} counts={transitComplete[0]} goal="3" url={transitImg}/>
                         }
-                        
                     </div>
                     
+                    <div className={classes.taskBoxContainer}>
+                        {bicycleComplete[1]?
+                            <ButtonBase onClick={claimReward}>
+                                <TaskBox  text="Bicycle 3 Times" type='Bicycle' canClaim={bicycleComplete[1]} counts={bicycleComplete[0]} goal="3" url={bicycleImg}/>
+                            </ButtonBase>
+                            :
+                            <TaskBox  text="Bicycle 3 Times" type='Bicycle' canClaim={bicycleComplete[1]} counts={bicycleComplete[0]} goal="3" url={bicycleImg}/>
+                        }
+                    </div>
 
                     <div className={classes.taskBoxContainer}>
-                        <TaskBox  text="Take Bicycle Three Times" type='Bicycle' canClaim={bicycleComplete[1]} counts={bicycleComplete[0]} goal="3" url={bicycleImg}/>
-                    </div>
-                        
-                    <div className={classes.taskBoxContainer}>
-                        <TaskBox text="Walk Three Times" type='Walk' canClaim={walkingComplete[1]} counts={walkingComplete[0]} goal="3" url={walkingImg}/>
+                        {walkingComplete[1]?
+                            <ButtonBase onClick={claimReward}>
+                                <TaskBox text="Walk 3 Times" type='Walk' canClaim={walkingComplete[1]} counts={walkingComplete[0]} goal="3" url={walkingImg}/>
+                            </ButtonBase>
+                            :
+                            <TaskBox text="Walk 3 Times" type='Walk' canClaim={walkingComplete[1]} counts={walkingComplete[0]} goal="3" url={walkingImg}/>
+                        }   
                     </div>
                   
                 </TabPanel>

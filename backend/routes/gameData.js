@@ -5,7 +5,7 @@ const initGameData = require('./game_utils/initGameData');
 const router = require('express').Router();
 let gameData = require('../models/gameData.model');
 let User = require('../models/user.model');
-const { increaseCoin, changeTransitCounts, changeWalkCounts, changeBicycleCounts } = require('./game_utils/changeGameData');
+const { increaseCoin, changeTransitCounts, changeWalkCounts, changeBicycleCounts, updateIsTracking, updateStartPoint, updateEndPoint, updateMode } = require('./game_utils/changeGameData');
 
 /**
  * get game data
@@ -105,6 +105,132 @@ router.route('/change').post(async(req, res) => {
             break;
     }
 }) 
+
+/**
+ * calculate the coins rewarded when users complete one track
+ */
+router.route('/calculate').get(async(req, res) => {
+    const user = await User.findOne({
+        _id: req.user._id
+    })
+    if(!user) {
+        return res.status(422).json("User Not Found");
+    }
+
+    let data = await gameData.findOne({
+        uid:req.user._id
+    })
+
+    let trackingStatus = {
+        isTracking: data.trackingStatus.isTracking,
+        hasConfirmed: data.hasConfirmed,
+        startPoint: {
+            lat: data.trackingStatus.startPoint.lat,
+            lng: data.trackingStatus.startPoint.lng
+        },
+        endPoint: {
+            lat: data.trackingStatus.endPoint.lat,
+            lng: data.trackingStatus.endPoint.lng
+        },
+        mode: data.trackingStatus.mode
+    }
+
+    const deg2rad = (deg) => {
+        return deg * (Math.PI/180)
+    }
+
+    let R = 6371;
+    let dLat = deg2rad(trackingStatus.startPoint.lat - trackingStatus.endPoint.lat);
+    let dLng = deg2rad(trackingStatus.startPoint.lng - trackingStatus.endPoint.lng);
+
+    let a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) + 
+        Math.cos(deg2rad(trackingStatus.startPoint.lat) * Math.cos(deg2rad(trackingStatus.endPoint.lat))) *
+        Math.sin(dLng/2) * Math.sin(dLng/2);
+    
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    let distance = R * c; // distance in km
+
+    let coins;
+    switch(trackingStatus.mode) {
+        case 'walking':
+            coins = distance * 2 * 200;
+            break;
+        case 'bicycling':
+            coins = distance * 1.5 * 200;
+            break;
+        case 'driving':
+            coins = distance * 0.3 * 200;
+            break;
+        case 'transit':
+            coins = distance * 0.7 * 200;
+            break;
+    }
+
+    increaseCoin(user._id, coins);
+    
+    return res.json(coins)
+})
+
+/**
+ * save tracking status
+ */
+router.route('/save/trackStatus').post(async(req, res) => {
+    const attribute = req.body.attribute; //attribute to be updated
+    const value = req.body.value; // new value
+
+    switch(attribute) {
+        case 'isTracking':
+            updateIsTracking(req.user._id, value);
+            break;
+        case 'startPoint':
+            updateStartPoint(req.user._id, value);
+            break;
+        case 'endPoint':
+            updateEndPoint(req.user._id, value);
+            break;
+        case 'mode':
+            console.log(value)
+            updateMode(req.user._id, value);
+            break;
+        case 'hasConfirmed':
+            updateHasConfirmed(req.user._id, value);
+            break;
+    }
+
+})
+
+ /**
+  * get current tracking status
+  */
+router.route('/get/trackStatus').get(async(req, res) => {
+    const user = await User.findOne({
+        _id: req.user._id
+    })
+    if(!user) {
+        return res.status(422).json("User Not Found");
+    }
+
+    let data = await gameData.findOne({
+        uid:req.user._id
+    })
+
+    let trackingStatus = {
+        isTracking: data.trackingStatus.isTracking,
+        hasConfirmed: data.hasConfirmed,
+        startPoint: {
+            lat: data.trackingStatus.startPoint.lat,
+            lng: data.trackingStatus.startPoint.lng
+        },
+        endPoint: {
+            lat: data.trackingStatus.endPoint.lat,
+            lng: data.trackingStatus.endPoint.lng
+        },
+        mode: data.trackingStatus.mode
+    }
+
+    return res.json(trackingStatus)
+})
 
 /* just for testing purpose */
 // router.route('/test').get(async(req, res) => {

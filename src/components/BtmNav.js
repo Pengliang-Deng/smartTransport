@@ -27,7 +27,7 @@ const useStyles = makeStyles({
         backgroundColor:'#FCFAF2',
         borderRadius:'13px',
         boxShadow: '2px 4px #DAC9A6',
-        paddingTop:'15px'
+        paddingTop:'10px'
     },
     gardenButton: {
         marginLeft: '10px',
@@ -35,7 +35,7 @@ const useStyles = makeStyles({
         backgroundColor:'#FCFAF2',
         borderRadius:'50px',
         boxShadow: '2px 4px #DAC9A6',
-        paddingTop:'15px'
+        paddingTop:'10px'
     }
 })
 

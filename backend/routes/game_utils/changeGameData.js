@@ -3,6 +3,66 @@
 let gameData = require('../../models/gameData.model');
 
 /**
+ * update isTracking attribute of the trackStatus
+ * @param uid user's id
+ * @param newValue new value
+ */
+function updateIsTracking(uid, newValue) {
+    gameData.findOneAndUpdate({uid: uid},
+        {$set: {"trackingStatus.isTracking": newValue}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+/**
+ * update startPoint attribute of the trackStatus
+ * @param uid user's id
+ * @param newValue new value
+ */
+function updateStartPoint(uid, newValue) {
+    gameData.findOneAndUpdate({uid: uid},
+        {$set: {"trackingStatus.startPoint": newValue}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+/**
+ * update endPoint attribute of the trackStatus
+ * @param uid user's id
+ * @param newValue new value
+ */
+function updateEndPoint(uid, newValue) {
+    gameData.findOneAndUpdate({uid: uid},
+        {$set: {"trackingStatus.endPoint": newValue}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+/**
+ * update hasConfirmed attribute of the trackStatus
+ * @param uid user's id
+ * @param newValue new value
+ */
+function updateHasConfirmed(uid, newValue) {
+    gameData.findOneAndUpdate({uid: uid},
+        {$set: {"trackingStatus.hasConfirmed": newValue}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+/**
+ * update mode attribute of the trackStatus
+ * @param uid user's id
+ * @param newValue new value
+ */
+function updateMode(uid, newValue) {
+    gameData.findOneAndUpdate({uid: uid},
+        {$set: {"trackingStatus.mode": newValue}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+/**
  * increase/decrease counts of the travel mode : walk
  * @param uid user's id
  * @param number increment/decrement
@@ -111,4 +171,5 @@ function increaseRareSeed (uid, number) {
     return true;
 }
 
-module.exports = {increaseCoin, increaseFertilizer, increaseSun, increaseWater, increaseRareSeed, changeBicycleCounts, changeTransitCounts, changeWalkCounts};
+module.exports = {increaseCoin, increaseFertilizer, increaseSun, increaseWater, increaseRareSeed, changeBicycleCounts, changeTransitCounts, changeWalkCounts,
+        updateEndPoint, updateIsTracking, updateStartPoint, updateMode, updateHasConfirmed};

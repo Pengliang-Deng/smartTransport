@@ -9,8 +9,16 @@ const gameDataSchema = new mongoose.Schema({
     lastLoginDate: String ,
     trackingStatus: {
         isTracking: Boolean,
-        startPoint: String,
-        endPoint: String
+        hasConfirmed: Boolean,
+        startPoint: {
+            lat: Number,
+            lng: Number
+        },
+        endPoint: {
+            lat: Number,
+            lng: Number
+        },
+        mode: String
     },
     weeklyTasks: {
         transit: Number,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BtmNav from './BtmNav';
 import { makeStyles } from '@material-ui/core/styles';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -11,6 +11,7 @@ import AvatarBar from './AvatarBar';
 import PixelTypography from './PixelTypography';
 import backgroundGif from '../imgs/road.gif';
 import Tracker from './Tracker';
+import http from '../util/axios_packaged';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -75,19 +76,35 @@ export default function HomePage(props) {
     const classes = useStyles();
 
     const [value, setValue] = useState('driving');
-    // should retrieve from backend 
     const [start, setStart] = useState(false);
 
     const handleChange = (event) => {
         setValue(event.target.value);
     };
 
+
+    useEffect(() => {pullIsTracking()},[]);
+
+    // function to get isTracking status
+    const pullIsTracking = () => {
+        let trackStatus;
+        http.get('/gameData/get/trackStatus').then((res) => {
+            trackStatus = res.data;
+            setStart(trackStatus.isTracking)
+        })
+    }
+
     const toggle = (event) => {
+
+        if (!start) {
+            // save the travel mode
+            console.log(value);
+            http.post('/gameData/save/trackStatus', {attribute: 'mode', value: JSON.stringify(value)})
+        }
+
         setStart(!start);
-        // do something with backend
-        // save start location if start
-        // save end location if end
-        // also change the start state variable
+        // save latest isTracking status
+        http.post('/gameData/save/trackStatus', {attribute: 'isTracking', value: true})
     }
 
     return (
@@ -96,9 +113,9 @@ export default function HomePage(props) {
             {start? 
                 <div className={classes.root2}> 
                     <Tracker />
-                    <Button onClick={toggle} className={classes.button2} size='large' variant="contained" color="secondary" >
+                    {/* <Button onClick={toggle} className={classes.button2} size='large' variant="contained" color="secondary" >
                         <PixelTypography fontStyle='textS2' variant='h5' text="END JOURNEY" />
-                    </Button>
+                    </Button> */}
                 </div>
                 :
             <div className={classes.root}>
