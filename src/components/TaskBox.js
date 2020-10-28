@@ -30,13 +30,36 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TaskBox(props) {
     const classes = useStyles();
+    const text = `${props.type}: Click to claim for 100 coins (${props.counts}/${props.goal})`;
     return (
+        props.canClaim ? 
+        <div>
+            <Paper className={classes.paper}>
+                <Grid style={{padding: '0px', display:'flex', justifyContent:'center'}} className={classes.grid} container spacing={2}>
+                    {/* <Grid item>
+                        <div ><img className={classes.img} alt="img" src={props.url} /></div>
+                    </Grid>
+                    <Grid item xs={12} sm container>
+                        <Grid  item xs container direction="column" spacing={2}>
+                            <Grid style={{padding: '0px', display:'flex', justifyContent:'flex-start'}} item xs>
+                                <PixelTypography style={{fontWeight:'bold'}} fontStyle="textS2" variant='h6' text={props.text} />
+                            </Grid>
+                                <Grid style={{padding: '0px', display:'flex', justifyContent:'flex-end'}} item xs>
+                                    <PixelTypography fontStyle="textS2" variant='h7' text={`Progress(${props.counts}/${props.goal})`} />
+                                </Grid>
+                        </Grid>
+                    </Grid> */}
+                    <Grid item>
+                        <PixelTypography  fontStyle="textS2" variant='h6' text={text} />
+                    </Grid>
+                </Grid>
+            </Paper>
+        </div>
+        :
         <div>
             <Paper className={classes.paper}>
                 <Grid className={classes.grid} container spacing={2}>
                     <Grid item>
-                    {/* "/static/images/grid/complex.jpg" */}
-                        
                         <div ><img className={classes.img} alt="img" src={props.url} /></div>
                     </Grid>
                     <Grid item xs={12} sm container>
@@ -45,10 +68,10 @@ export default function TaskBox(props) {
                                 <PixelTypography style={{fontWeight:'bold'}} fontStyle="textS2" variant='h6' text={props.text} />
                             </Grid>
                             <Grid style={{padding: '0px', display:'flex', justifyContent:'flex-end'}} item xs>
-                                <PixelTypography fontStyle="textS2" variant='h7' text={`Progress(${props.complete}/${props.goal})`} />
+                                <PixelTypography fontStyle="textS2" variant='h7' text={`Progress(${props.counts}/${props.goal})`} />
                             </Grid>
                             <Grid style={{paddingTop: '1.5px', paddingBottom:'9px'}} item xs>
-                                <LinearProgress className={classes.linearProgress} variant="determinate" value={`${props.complete/props.goal * 100}`}></LinearProgress>
+                                <LinearProgress className={classes.linearProgress} variant="determinate" value={`${props.counts/props.goal * 100}`}></LinearProgress>
                             </Grid>
                         </Grid>
                     </Grid>

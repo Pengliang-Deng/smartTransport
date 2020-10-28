@@ -3,6 +3,45 @@
 let gameData = require('../../models/gameData.model');
 
 /**
+ * increase/decrease counts of the travel mode : walk
+ * @param uid user's id
+ * @param number increment/decrement
+ * @returns {boolean} true if succeded
+ */
+function changeWalkCounts (uid, number) {
+    gameData.findOneAndUpdate({uid: uid},
+        {$inc: {"weeklyTasks.walk": number}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+/**
+ * increase/decrease counts of the travel mode : bicycle
+ * @param uid user's id
+ * @param number increment/decrement
+ * @returns {boolean} true if succeded
+ */
+function changeBicycleCounts (uid, number) {
+    gameData.findOneAndUpdate({uid: uid},
+        {$inc: {"weeklyTasks.bicycle": number}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+/**
+ * increase/decrease counts of the travel mode : transit
+ * @param uid user's id
+ * @param number increment/decrement
+ * @returns {boolean} true if succeded
+ */
+function changeTransitCounts (uid, number) {
+    gameData.findOneAndUpdate({uid: uid},
+        {$inc: {"weeklyTasks.transit": number}})
+        .catch(error => {console.error(error); return false;});
+    return true;
+}
+
+/**
  * increase player's coin resource
  * @param uid user's id
  * @param number increment
@@ -72,4 +111,4 @@ function increaseRareSeed (uid, number) {
     return true;
 }
 
-module.exports = {increaseCoin, increaseFertilizer, increaseSun, increaseWater, increaseRareSeed};
+module.exports = {increaseCoin, increaseFertilizer, increaseSun, increaseWater, increaseRareSeed, changeBicycleCounts, changeTransitCounts, changeWalkCounts};

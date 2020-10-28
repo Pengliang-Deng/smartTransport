@@ -60,6 +60,7 @@ export default function AvatarBar(props) {
         await http.get('/gameData/get/coins')
             .then((res) => {
                 basicInfo = res.data;
+                // console.log(basicInfo)
             })
             .catch((reason) => {
                 // window.location = '/';
@@ -70,7 +71,7 @@ export default function AvatarBar(props) {
         })
     }
 
-    useEffect(() => {pullBasicInfo()})
+    useEffect(() => {pullBasicInfo()}, [])
 
     const { username, coins } = accountInfo;
 

@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
-// import MyCircularProgress from './Components/MyCircularProgress';
-// import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import BtmNav from "./components/BtmNav";
-// import LinearProgress from '@material-ui/core/LinearProgress';
-// import Fab from '@material-ui/core/Fab';
-// import Modal from '@material-ui/core/Modal';
 import Paper from '@material-ui/core/Paper';
 import AvatarBar from './components/AvatarBar';
 import TaskBox from './components/TaskBox';
@@ -15,7 +10,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-// import AppBar from '@material-ui/core/AppBar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+
 import Box from '@material-ui/core/Box';
 import PixelTypography from './components/PixelTypography';
 import Quiz from './Quiz';
@@ -102,12 +99,23 @@ export default function Challenges(props) {
     const [value, setValue] = useState(0)
     
     const [taskInfo, setTaskInfo] = useState({
-        bicycleComplete: 0,
-        walkingComplete: 0,
-        transitComplete: 0,
+        bicycleComplete: [0, false],
+        walkingComplete: [0, false],
+        transitComplete: [0, false]
     })
 
     const { bicycleComplete, walkingComplete, transitComplete } = taskInfo;
+
+    /**
+     * Function to check whether users can claim task rewards or not
+     * @param {Number} counts 
+     */
+    const canClaim = (counts) => {
+        if (counts >= 3) {
+            return true
+        }
+        return false
+    }
 
     const pullTaskInfo = async () => {
         let taskStatus;
@@ -116,18 +124,24 @@ export default function Challenges(props) {
             taskStatus = res.data;
         })
         .catch((reason) => {
-            // window.location = '/';
+            window.location = '/';
         })
 
         // console.log(taskStatus)
+        // Reload the current page if did not retrieve data from the server
+        if (typeof taskStatus === 'undefined' ) {
+            window.location.reload();
+        }
+
+        // console.log(canClaim(taskStatus.transit))
         setTaskInfo({
-            bicycleComplete: taskStatus.bicycle,
-            walkingComplete: taskStatus.walk,
-            transitComplete: taskStatus.transit,
+            bicycleComplete: [taskStatus.bicycle, canClaim(taskStatus.bicycle)],
+            walkingComplete: [taskStatus.walk, canClaim(taskStatus.walk)],
+            transitComplete: [taskStatus.transit, canClaim(taskStatus.transit)],
         })
 }
 
-useEffect(() => {pullTaskInfo()})
+useEffect(() => {pullTaskInfo()}, [])
 
 
 
@@ -135,35 +149,56 @@ useEffect(() => {pullTaskInfo()})
         setValue(newValue);
     }
 
-    const handleChangeIndex = (index) => {
-        setValue(index);
-    };
+    /**
+     * claim task rewarding
+     */
+    const claimReward = (event) => {
+        // console.log(event.target.innerText)
+        // Output: Transit: Click to claim for 100 coins (3/3)
 
-    const getMyDate = () => {
-        let date = new Date();
-        let myDateArray = date.toString().split(' ');
-        let myDate = myDateArray[0] + myDateArray[1] + myDateArray[2] + myDateArray[3];
-        return myDate
+        let type = event.target.innerText.split(':')[0].toLowerCase();
+        // console.log(type) : ["Transit", " Click to claim for 100 coins (3/3)"]
+        http.post('/gameData/change', {increment: -3, mode: type})
+        .then(
+            http.post('/gameData/add/coins', {increment: 100}),
+            window.alert("100 Coins added"),
+            window.location.reload()
+        )
+        .catch(res => {
+            // nothing
+        })
+        
     }
 
-    const quizNav = () => {
+    // const handleChangeIndex = (index) => {
+    //     setValue(index);
+    // };
+
+    // const getMyDate = () => {
+    //     let date = new Date();
+    //     let myDateArray = date.toString().split(' ');
+    //     let myDate = myDateArray[0] + myDateArray[1] + myDateArray[2] + myDateArray[3];
+    //     return myDate
+    // }
+
+    // const quizNav = () => {
        
-        // console.log(this.state.lastTrial)
-        // console.log(this.state.today)
-        if (this.state.lastTrial !== this.state.today) {
-            this.setState({lastTrial : this.state.today})
-            // update the database
-            window.location = '/quiz';
-        } else {
-            this.setState({open:true});
-            // console.log(this.state.open)
-        }
-    }
+    //     // console.log(this.state.lastTrial)
+    //     // console.log(this.state.today)
+    //     if (this.state.lastTrial !== this.state.today) {
+    //         this.setState({lastTrial : this.state.today})
+    //         // update the database
+    //         window.location = '/quiz';
+    //     } else {
+    //         this.setState({open:true});
+    //         // console.log(this.state.open)
+    //     }
+    // }
 
-    const handleClose = () => {
-        this.setState({open:false})
-        // console.log(this.state.open)
-    }
+    // const handleClose = () => {
+    //     this.setState({open:false})
+    //     // console.log(this.state.open)
+    // }
 
 
     return (
@@ -189,21 +224,26 @@ useEffect(() => {pullTaskInfo()})
                 
                 <TabPanel value={value} index={0} >
                     
-                        <div className={classes.taskBoxContainer}>
-                            <ButtonBase>
-                                <TaskBox  text="Take Transit Three Times" complete={transitComplete} goal="3" url={transitImg}/>
+                    <div className={classes.taskBoxContainer}>
+                        {transitComplete[1]?
+                            <ButtonBase onClick={claimReward}>
+                                <TaskBox  text="Take Transit Three Times" type='Transit' canClaim={transitComplete[1]} counts={transitComplete[0]} goal="3" url={transitImg}/>
                             </ButtonBase>
-                        </div>
+                            :
+                            <TaskBox  text="Take Transit Three Times" type='Transit' canClaim={transitComplete[1]} counts={transitComplete[0]} goal="3" url={transitImg}/>
+                        }
+                        
+                    </div>
                     
 
                     <div className={classes.taskBoxContainer}>
-                        <TaskBox  text="Take Bicycle Three Times" complete={bicycleComplete} goal="3" url={bicycleImg}/>
+                        <TaskBox  text="Take Bicycle Three Times" type='Bicycle' canClaim={bicycleComplete[1]} counts={bicycleComplete[0]} goal="3" url={bicycleImg}/>
                     </div>
-                    
+                        
                     <div className={classes.taskBoxContainer}>
-                        <TaskBox text="Walk Three Times" complete={walkingComplete} goal="3" url={walkingImg}/>
+                        <TaskBox text="Walk Three Times" type='Walk' canClaim={walkingComplete[1]} counts={walkingComplete[0]} goal="3" url={walkingImg}/>
                     </div>
-                    
+                  
                 </TabPanel>
 
                 <TabPanel value={value} index={1} >

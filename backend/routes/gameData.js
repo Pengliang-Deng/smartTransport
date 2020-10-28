@@ -5,7 +5,7 @@ const initGameData = require('./game_utils/initGameData');
 const router = require('express').Router();
 let gameData = require('../models/gameData.model');
 let User = require('../models/user.model');
-const { increaseCoin } = require('./game_utils/changeGameData');
+const { increaseCoin, changeTransitCounts, changeWalkCounts, changeBicycleCounts } = require('./game_utils/changeGameData');
 
 /**
  * get game data
@@ -85,6 +85,26 @@ router.route('/add/coins').post(async(req, res) => {
     console.log(req);
     increaseCoin(req.user._id, increment)
 })
+
+/**
+ * change counts of a travel mode
+ */
+router.route('/change').post(async(req, res) => {
+    const increment = req.body.increment;
+    const mode = req.body.mode;
+        
+    switch(mode) {
+        case 'transit':
+            changeTransitCounts(req.user._id, increment);
+            break;
+        case 'walk':
+            changeWalkCounts(req.user._id, increment);
+            break;
+        case 'bicycle':
+            changeBicycleCounts(req.user._id, increment);
+            break;
+    }
+}) 
 
 /* just for testing purpose */
 // router.route('/test').get(async(req, res) => {
