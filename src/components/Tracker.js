@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 // import TextField from '@material-ui/core/TextField';
 import AutoComplete from "react-google-autocomplete";
 import PixelTypography from './PixelTypography';
+import Button from '@material-ui/core/Button';
+import http from '../util/axios_packaged';
 
 
 
@@ -21,10 +23,26 @@ Geocode.setApiKey("AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM")
 
 const styles = {
     marginT: {marginTop: 1, marginBottom: 4},
+    margin:{
+        marginTop: 1,
+        marginBottom: 16
+    },
+    button2: {
+        marginTop: '2px',
+        backgroundColor: '#43341B',
+        // position: 'relative',
+        // left: '50%',
+        // transform: 'translateX(-50%)',
+    },
 }
 
 
 export default class Tracker extends React.Component {
+    constructor(props) {
+        super(props);
+        this.confirmLocation = this.confirmLocation.bind(this)
+      }
+    
 
     state = {
         address: '',
@@ -41,11 +59,13 @@ export default class Tracker extends React.Component {
             lat: 0,
             lng: 0,
         },
+        locationWatcher: null, // the id of location watcher
+        hasConfirmedStartPosition: false
     }
 
     componentDidMount() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
+            const watcherId = navigator.geolocation.watchPosition(position => {
                 this.setState({
                     mapPosition: {
                         lat: position.coords.latitude,
@@ -80,8 +100,22 @@ export default class Tracker extends React.Component {
 
                     })
             });
+            this.setState({locationWatcher: watcherId}) // record watcher id
         } 
+
+        http.get('/gameData/get/trackStatus').then((res) => {
+            let trackStatus = res.data;
+            this.setState({
+                hasConfirmedStartPosition: trackStatus.hasConfirmed
+            })
+        })
     };
+
+    componentWillUnmount() {
+        if (this.state.locationWatcher) {
+            navigator.geolocation.clearWatch(this.state.locationWatcher);
+        }
+    }
 
     getCity = (addressArray) => {
         let city = '';
@@ -177,11 +211,66 @@ export default class Tracker extends React.Component {
                     lat: newLat,
                     lng: newLng, 
                 },
+                
             })
         } catch (err) {
             console.log(err)
         }
       
+    }
+
+    /**
+     * a function to confirm start location and end location 
+     */
+    confirmLocation() {
+        let trackStatus;
+        http.get('/gameData/get/trackStatus')
+        .then((res) => {
+            trackStatus = res.data;
+            console.log("0")
+
+            if (this.state.hasConfirmedStartPosition) {
+                // save end position's lat and lng
+                http.post('/gameData/save/trackStatus', {attribute: 'endPoint', value: this.state.markerPosition})
+                // change the state of hasConfirmedStartPosition
+                this.setState({
+                    hasConfirmedStartPosition: false,
+                })
+                http.post('/gameData/save/trackStatus', {attribute: 'hasConfirmed', value: this.hasConfirmedStartPosition})
+
+                // change isTracking
+                http.post('/gameData/save/trackStatus', {attribute: 'isTracking', value: false})
+                
+                let coins;
+                http.get('/gameData/calculate').then((res) => {
+                    coins = res.data
+                })
+
+                window.alert(`${coins} have been rewarded!`)
+                window.location.reload()
+                return 
+                // console.log("1")
+                
+                
+            }
+
+            if (trackStatus.isTracking) {
+                // save start position's lat and lng
+                console.log(this.state.markerPosition);
+                http.post('/gameData/save/trackStatus', {attribute: 'startPoint', value: this.state.markerPosition})
+                // change the state of hasConfirmedStartPosition
+                this.setState({
+                    hasConfirmedStartPosition: true,
+                })
+                http.post('/gameData/save/trackStatus', {attribute: 'hasConfirmed', value: this.hasConfirmedStartPosition})
+                // console.log("2")
+                // window.location.reload()
+                
+            }
+
+            
+        })
+ 
     }
 
     render() {
@@ -221,9 +310,15 @@ export default class Tracker extends React.Component {
             
             <Grid container direction="column" justify="center" alignItems="center">
                 <Grid item style={styles.marginT}>
-                    <PixelTypography fontStyle="textS2" variant='h4' text="JOURNEY STARTS AT" />
+                    {
+                        this.state.hasConfirmedStartPosition?
+                        <PixelTypography fontStyle="textS2" variant='h4' text="JOURNEY ENDS AT" />
+                        :
+                        <PixelTypography fontStyle="textS2" variant='h4' text="JOURNEY STARTS AT" />
+                    }
                 </Grid>
-                <Grid item style={styles.marginT}>
+
+                {/* <Grid item style={styles.marginT}>
                     <PixelTypography fontStyle="textS2" variant='h6' text={`City: `+ this.state.city} />
                 </Grid>
                 <Grid item style={styles.marginT} >
@@ -231,9 +326,14 @@ export default class Tracker extends React.Component {
                 </Grid>
                 <Grid item style={styles.marginT} >
                     <PixelTypography fontStyle="textS2" variant='h6' text={`State: `+ this.state.state} />
-                </Grid>
+                </Grid> */}
                 <Grid item style={styles.marginT} >
-                    <PixelTypography fontStyle="textS2" variant='h6' text={`Address: `+ this.state.address} />
+                    <PixelTypography fontStyle="textS2" variant='h5' text={`Address: `+ this.state.address} />
+                </Grid>
+                <Grid item style={styles.margin}>
+                    <Button onClick={this.confirmLocation} style={styles.button2} size='large' variant="contained" color="secondary" >
+                        <PixelTypography fontStyle='textS2' variant='h5' text="CONFIRM LOCATION" />
+                    </Button>
                 </Grid>
             </Grid>
 

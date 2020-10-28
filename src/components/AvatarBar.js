@@ -56,20 +56,23 @@ export default function AvatarBar(props) {
      * return an object with format of {username, coins}
      */
     const pullBasicInfo = async () => {
-        let basicInfo;
-        await http.get('/gameData/get/coins')
+        let data;
+        await http.get('/gameData/get')
             .then((res) => {
-                basicInfo = res.data;
+                data = res.data;
                 // console.log(basicInfo)
             })
             .catch((reason) => {
                 // window.location = '/';
             })
+        
+        if (!data) window.location.reload(); // handle null value caused by timeout
         setState({
-            username: basicInfo.username,
-            coins: basicInfo.coins
+            username: data.playerInfo.playerName,
+            coins: data.itemsInfo.coins
         })
     }
+
 
     useEffect(() => {pullBasicInfo()}, [])
 

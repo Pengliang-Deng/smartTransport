@@ -22,8 +22,16 @@ const initialGameInfo = {
     uid: null ,
     trackingStatus: {
         isTracking: false,
-        startPoint: '',
-        endPoint: ''
+        hasConfirmed: false,
+        startPoint: {
+            lat: 0,
+            lng: 0
+        },
+        endPoint: {
+            lat: 0,
+            lng: 0
+        },
+        mode: ''
     },
     weeklyTasks: {
         transit: 0,
