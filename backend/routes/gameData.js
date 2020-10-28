@@ -158,16 +158,16 @@ router.route('/calculate').get(async(req, res) => {
 
     switch(trackingStatus.mode) {
         case 'walking':
-            coins = distance * 2 * 200;
+            coins = distance * 2 * 10;
             break;
         case 'bicycling':
-            coins = distance * 1.5 * 200;
+            coins = distance * 1.5 * 10;
             break;
         case 'driving':
-            coins = distance * 0.3 * 200;
+            coins = distance * 0.3 * 10;
             break;
         case 'transit':
-            coins = distance * 0.7 * 200;
+            coins = distance * 0.7 * 10;
             break;
     }
     coins = Math.floor(coins);
