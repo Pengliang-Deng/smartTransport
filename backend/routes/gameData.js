@@ -167,7 +167,7 @@ router.route('/calculate').get(async(req, res) => {
             break;
     }
 
-    increaseCoin(user._id, coins);
+    await increaseCoin(user._id, coins);
     
     return res.json(coins)
 })

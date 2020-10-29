@@ -243,10 +243,11 @@ export default class Tracker extends React.Component {
                 
                 let coins;
                 http.get('/gameData/calculate').then((res) => {
-                    coins = res.data
+                    coins = res.data;
+                    window.alert(`${coins} have been rewarded!`)
                 })
 
-                window.alert(`${coins} have been rewarded!`)
+                
                 window.location.reload()
                 return 
                 // console.log("1")
