@@ -90,8 +90,8 @@ const seedListItemsInfo = {
         name: 'Mystery',
         image: mystery_seed,
         description: 'Plant it, you have a chance to get a mysterious flower, or just an ordinary one.',
-        sale: false,
-        price: 100,
+        sale: true,
+        price: 1000,
     }
 }
 
