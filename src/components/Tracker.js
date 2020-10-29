@@ -227,7 +227,7 @@ export default class Tracker extends React.Component {
         http.get('/gameData/get/trackStatus')
         .then((res) => {
             trackStatus = res.data;
-            console.log("0")
+            // console.log("0")
 
             if (this.state.hasConfirmedStartPosition) {
                 // save end position's lat and lng
@@ -236,7 +236,7 @@ export default class Tracker extends React.Component {
                 this.setState({
                     hasConfirmedStartPosition: false,
                 })
-                http.post('/gameData/save/trackStatus', {attribute: 'hasConfirmed', value: this.hasConfirmedStartPosition})
+                http.post('/gameData/save/trackStatus', {attribute: 'hasConfirmed', value: false})
 
                 // change isTracking
                 http.post('/gameData/save/trackStatus', {attribute: 'isTracking', value: false})
@@ -245,22 +245,13 @@ export default class Tracker extends React.Component {
                 http.get('/gameData/calculate').then((res) => {
                     coins = res.data;
                     window.alert(`${coins} have been rewarded!`)
-<<<<<<< HEAD
-                })
-
-                
-                window.location.reload()
-                return 
-=======
                     window.location.reload();
                 })
 
-                return;
+                // add counts for the target travel mode
+                http.post('/gameData/Change', {increment: 1, mode: trackStatus.mode})
 
->>>>>>> adc854a7f1e5ef9b0dd0c3e425e70ddde69a20f7
-                // console.log("1")
-                
-                
+                return;
             }
 
             if (trackStatus.isTracking) {
@@ -271,10 +262,9 @@ export default class Tracker extends React.Component {
                 this.setState({
                     hasConfirmedStartPosition: true,
                 })
-                http.post('/gameData/save/trackStatus', {attribute: 'hasConfirmed', value: this.hasConfirmedStartPosition})
+                http.post('/gameData/save/trackStatus', {attribute: 'hasConfirmed', value: true})
                 // console.log("2")
                 // window.location.reload()
-                
             }
 
             
@@ -288,19 +278,7 @@ export default class Tracker extends React.Component {
                 defaultZoom={15}
                 defaultCenter={{ lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng }}
             >
-                {/* <AutoComplete
-                            style={{
-                                width: '96%',
-                                height: '40px',
-                                paddingLeft: '16px',
-                                marginTop: '10px',
-                                marginBottom: '2rem'
-                            }}
-                            onPlaceSelected={this.onPlaceSelected}
-                            types={['(regions)']}
-                 /> */}
                 <Marker
-                    //google={this.props.google}
                     draggable={true}
                     onDragEnd={this.onMarkerDragEnd}
                     position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }}
@@ -327,15 +305,6 @@ export default class Tracker extends React.Component {
                     }
                 </Grid>
 
-                {/* <Grid item style={styles.marginT}>
-                    <PixelTypography fontStyle="textS2" variant='h6' text={`City: `+ this.state.city} />
-                </Grid>
-                <Grid item style={styles.marginT} >
-                    <PixelTypography fontStyle="textS2" variant='h6' text={`Area: `+ this.state.area} />
-                </Grid>
-                <Grid item style={styles.marginT} >
-                    <PixelTypography fontStyle="textS2" variant='h6' text={`State: `+ this.state.state} />
-                </Grid> */}
                 <Grid item style={styles.marginT} >
                     <PixelTypography fontStyle="textS2" variant='h5' text={`Address: `+ this.state.address} />
                 </Grid>
@@ -345,18 +314,6 @@ export default class Tracker extends React.Component {
                     </Button>
                 </Grid>
             </Grid>
-
-            {/* <Descriptions bordered size = 'small'>
-                <Descriptions.Item label="City">{this.state.city}</Descriptions.Item>
-                <Descriptions.Item label="Area">{this.state.area}</Descriptions.Item>
-                <Descriptions.Item label="State">{this.state.state}</Descriptions.Item>
-                <Descriptions.Item label="Address" span={2}>
-                    {this.state.address}
-                </Descriptions.Item>
-            </Descriptions> */}
-            
-            {/* <Input placeholder="Search">
-            </Input> */}
 
             <MapWithAMarker
                 googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiCd2qTJUFQq5lI5B9T3Intx_aAcDieIM&v=3.exp&libraries=geometry,drawing,places"

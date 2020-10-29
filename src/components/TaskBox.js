@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 export default function TaskBox(props) {
     const classes = useStyles();
     const text = `${props.type}: Click to claim for 100 coins (${props.counts}/${props.goal})`;
@@ -36,19 +35,6 @@ export default function TaskBox(props) {
         <div>
             <Paper className={classes.paper}>
                 <Grid style={{padding: '0px', display:'flex', justifyContent:'center'}} className={classes.grid} container spacing={2}>
-                    {/* <Grid item>
-                        <div ><img className={classes.img} alt="img" src={props.url} /></div>
-                    </Grid>
-                    <Grid item xs={12} sm container>
-                        <Grid  item xs container direction="column" spacing={2}>
-                            <Grid style={{padding: '0px', display:'flex', justifyContent:'flex-start'}} item xs>
-                                <PixelTypography style={{fontWeight:'bold'}} fontStyle="textS2" variant='h6' text={props.text} />
-                            </Grid>
-                                <Grid style={{padding: '0px', display:'flex', justifyContent:'flex-end'}} item xs>
-                                    <PixelTypography fontStyle="textS2" variant='h7' text={`Progress(${props.counts}/${props.goal})`} />
-                                </Grid>
-                        </Grid>
-                    </Grid> */}
                     <Grid item>
                         <PixelTypography  fontStyle="textS2" variant='h6' text={text} />
                     </Grid>

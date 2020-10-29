@@ -10,8 +10,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 
 import Box from '@material-ui/core/Box';
 import PixelTypography from './components/PixelTypography';

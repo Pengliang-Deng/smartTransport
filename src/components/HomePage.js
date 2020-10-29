@@ -113,9 +113,6 @@ export default function HomePage(props) {
             {start? 
                 <div className={classes.root2}> 
                     <Tracker />
-                    {/* <Button onClick={toggle} className={classes.button2} size='large' variant="contained" color="secondary" >
-                        <PixelTypography fontStyle='textS2' variant='h5' text="END JOURNEY" />
-                    </Button> */}
                 </div>
                 :
             <div className={classes.root}>

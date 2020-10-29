@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken') // jwt
 let User = require('../models/user.model');
 
 
-
+/**
+ * Login Validation
+ */
 router.route('/').post(async(req, res) => {
     const user = await User.findOne({
         username: req.body.username,
@@ -40,6 +42,10 @@ router.route('/').post(async(req, res) => {
 });
 
 
+
+/**
+ * Account Registration
+ */
 router.route('/add').post((req, res) => {
     const username = req.body.username;
     const password = bcrypt.hashSync(req.body.password, 10);
@@ -48,14 +54,6 @@ router.route('/add').post((req, res) => {
     newUser.save()
     .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error:' + err));
-
-    // initialise game data for a new user
-    // const user = User.findOne({
-    //     username: username,
-    // })
-
-    // const newGameData = initGameData(user.username, user._id);
-    // newGameData.save();
 
 })
 

@@ -9,6 +9,7 @@ const useStyle = makeStyles((theme) => ({
     }
 }))
 
+// This component is abandoned during the development process
 export default function MyCircularProgress(props) {
     const classes = useStyle();
 

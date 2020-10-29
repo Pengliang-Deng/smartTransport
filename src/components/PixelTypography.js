@@ -11,6 +11,7 @@ const useStyle = makeStyles((theme) => ({
     }
 }))
 
+// Pixel style font family is used
 export default function PixelTypography(props) {
     const classes = useStyle();
     return (

@@ -75,13 +75,9 @@ export default class Launch extends Component {
             password: this.state.password
         }
 
-        // console.log(userInfo)
-        
-
         http.post('/', userInfo)
         .then((res) => {
             const user = res.data
-            // console.log(typeof(user))
             if (user) {
                 localStorage.setItem('jwt-token', user.data.token); // store token
                 window.location = '/homepage'
@@ -89,8 +85,8 @@ export default class Launch extends Component {
         })
     }
 
-    register() {
 
+    register() {
         const userInfo = {
             username: this.state.username,
             password: this.state.password
@@ -101,6 +97,7 @@ export default class Launch extends Component {
 
     }
 
+    // toggle interface
     toggleHasAccount() {
         this.setState({
             hasAccount: !this.state.hasAccount

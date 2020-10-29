@@ -107,7 +107,7 @@ router.route('/change').post(async(req, res) => {
 }) 
 
 /**
- * calculate the coins rewarded when users complete one track
+ * calculate the coins rewarded when users complete one track according to lat and lng
  */
 router.route('/calculate').get(async(req, res) => {
     const user = await User.findOne({
@@ -140,6 +140,7 @@ router.route('/calculate').get(async(req, res) => {
         return deg * (Math.PI/180)
     }
 
+    // using the Haversine formula to calculate the distance.
     let R = 6371;
     let dLat = deg2rad(trackingStatus.startPoint.lat - trackingStatus.endPoint.lat);
     let dLng = deg2rad(trackingStatus.startPoint.lng - trackingStatus.endPoint.lng);

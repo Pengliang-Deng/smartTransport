@@ -12,6 +12,7 @@ const containerStyle = {
   height: '700px'
 };
 
+// this tracker is not used 
 class Tracker extends Component {
     constructor (props) {
         super(props)

@@ -38,6 +38,7 @@ const styles = ({
     }
 })
 
+// this component is not used 
 export default class Challenges extends Component {
     constructor(props) {
         super(props);
