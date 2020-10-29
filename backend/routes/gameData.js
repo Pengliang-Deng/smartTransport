@@ -5,7 +5,7 @@ const initGameData = require('./game_utils/initGameData');
 const router = require('express').Router();
 let gameData = require('../models/gameData.model');
 let User = require('../models/user.model');
-const { increaseCoin, changeTransitCounts, changeWalkCounts, changeBicycleCounts, updateIsTracking, updateStartPoint, updateEndPoint, updateMode } = require('./game_utils/changeGameData');
+const { increaseCoin, changeTransitCounts, changeWalkCounts, changeBicycleCounts, updateIsTracking, updateStartPoint, updateEndPoint, updateMode, updateHasConfirmed } = require('./game_utils/changeGameData');
 
 /**
  * get game data
@@ -121,6 +121,7 @@ router.route('/calculate').get(async(req, res) => {
         uid:req.user._id
     })
 
+    console.log("data: " + data)
     let trackingStatus = {
         isTracking: data.trackingStatus.isTracking,
         hasConfirmed: data.hasConfirmed,
@@ -151,21 +152,25 @@ router.route('/calculate').get(async(req, res) => {
     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     let distance = R * c; // distance in km
 
-    let coins;
+    let coins = 0;
+    console.log("T mode: " + trackingStatus.mode);
+    console.log("Distance: " + distance);
+
     switch(trackingStatus.mode) {
         case 'walking':
-            coins = distance * 2 * 200;
+            coins = distance * 2 * 50;
             break;
         case 'bicycling':
-            coins = distance * 1.5 * 200;
+            coins = distance * 1.5 * 50;
             break;
         case 'driving':
-            coins = distance * 0.3 * 200;
+            coins = distance * 0.3 * 50;
             break;
         case 'transit':
-            coins = distance * 0.7 * 200;
+            coins = distance * 0.7 * 50;
             break;
     }
+    coins = Math.floor(coins);
 
     await increaseCoin(user._id, coins);
     

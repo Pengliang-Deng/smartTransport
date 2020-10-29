@@ -99,7 +99,7 @@ export default function HomePage(props) {
         if (!start) {
             // save the travel mode
             console.log(value);
-            http.post('/gameData/save/trackStatus', {attribute: 'mode', value: JSON.stringify(value)})
+            http.post('/gameData/save/trackStatus', {attribute: 'mode', value: value})
         }
 
         setStart(!start);
