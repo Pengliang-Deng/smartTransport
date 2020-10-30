@@ -1,5 +1,4 @@
 import SvgIcon from "@material-ui/core/SvgIcon";
-import water from "./water1.svg";
 import React from "react";
 import seedIcon from "./shop1.svg";
 import fenceIcon from "./shop2.svg";

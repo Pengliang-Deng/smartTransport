@@ -1,5 +1,5 @@
 import React from 'react'
-import {createMuiTheme, makeStyles, ThemeProvider, withTheme} from "@material-ui/core/styles";
+import {createMuiTheme, makeStyles, ThemeProvider} from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";

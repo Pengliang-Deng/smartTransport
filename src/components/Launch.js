@@ -5,12 +5,11 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 // import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@material-ui/core'
-import axios from 'axios'
 import http from '../util/axios_packaged'
 
 import PixelTypography from './PixelTypography'
 
-const backEndURL = 'http://192.168.3.4:5000/';
+// const backEndURL = 'http://192.168.3.4:5000/';
 
 const styles = {
     container: {

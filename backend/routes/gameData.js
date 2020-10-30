@@ -157,6 +157,7 @@ router.route('/calculate').get(async(req, res) => {
     console.log("T mode: " + trackingStatus.mode);
     console.log("Distance: " + distance);
 
+    
     switch(trackingStatus.mode) {
         case 'walking':
             coins = distance * 2 * 50;

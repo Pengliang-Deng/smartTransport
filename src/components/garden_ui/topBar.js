@@ -1,9 +1,8 @@
 import React from 'react'
-import {createMuiTheme, makeStyles} from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import Box from "@material-ui/core/Box";
 import StoreIcon from "@material-ui/icons/Store";
 import PixelAppBar from "../containers/PixelAppBar";
 import { Link }from 'react-router-dom';

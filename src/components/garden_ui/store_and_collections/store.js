@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import StoreBar from "./storeAppBar";
-import StoreList from "./plantingList";
 import StoreBtmNav from "./StoreBtmNav";
 import GardenLoading from "../loading";
 import http from "../../../util/axios_packaged";

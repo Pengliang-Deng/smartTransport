@@ -7,12 +7,8 @@ import {
     Marker,
 } from "react-google-maps";
 import Geocode from "react-geocode";
-// import { Descriptions, Input } from 'antd';
-// import PixelTypography from './PixelTypography';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-// import TextField from '@material-ui/core/TextField';
-import AutoComplete from "react-google-autocomplete";
+
 import PixelTypography from './PixelTypography';
 import Button from '@material-ui/core/Button';
 import http from '../util/axios_packaged';

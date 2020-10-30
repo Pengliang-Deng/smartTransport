@@ -8,7 +8,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 import Box from '@material-ui/core/Box';
@@ -167,37 +167,6 @@ useEffect(() => {pullTaskInfo()}, [])
         })
         
     }
-
-    // const handleChangeIndex = (index) => {
-    //     setValue(index);
-    // };
-
-    // const getMyDate = () => {
-    //     let date = new Date();
-    //     let myDateArray = date.toString().split(' ');
-    //     let myDate = myDateArray[0] + myDateArray[1] + myDateArray[2] + myDateArray[3];
-    //     return myDate
-    // }
-
-    // const quizNav = () => {
-       
-    //     // console.log(this.state.lastTrial)
-    //     // console.log(this.state.today)
-    //     if (this.state.lastTrial !== this.state.today) {
-    //         this.setState({lastTrial : this.state.today})
-    //         // update the database
-    //         window.location = '/quiz';
-    //     } else {
-    //         this.setState({open:true});
-    //         // console.log(this.state.open)
-    //     }
-    // }
-
-    // const handleClose = () => {
-    //     this.setState({open:false})
-    //     // console.log(this.state.open)
-    // }
-
 
     return (
         <div className={classes.box}>
